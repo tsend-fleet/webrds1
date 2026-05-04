@@ -1,0 +1,357 @@
+{
+  "brand": "Maxwell Roadside",
+  "tagline": "24/7 Roadside Assistance, Mobile Mechanic & Heavy-Duty Towing",
+  "phone": "+18065550124",
+  "phoneDisplay": "(806) 555-0124",
+  "whatsapp": "+18065550124",
+  "email": "dispatch@maxwellroadside.com",
+  "address": "4200 I-40 Access Rd, Amarillo, TX 79103",
+  "hoursWeekday": "24/7 Dispatch — Always Open",
+  "hoursWeekend": "24/7 Dispatch — Always Open",
+  "dispatchNote": "Avg response time: 22–28 minutes within Amarillo city limits",
+  "announcement": "🚨 24/7 EMERGENCY DISPATCH — CALL (806) 555-0124 — Avg ETA 25 min",
+
+  "nav": [
+    { "label": "Home",     "href": "index.html#home" },
+    { "label": "Services", "href": "index.html#services" },
+    { "label": "About",    "href": "index.html#about" },
+    { "label": "Reviews",  "href": "index.html#reviews" },
+    { "label": "Fleet",    "href": "index.html#fleet" },
+    { "label": "Contact",  "href": "index.html#contact" }
+  ],
+
+  "hero": {
+    "title": "Stuck on I-40? We're 22 Minutes Away.",
+    "subtitle": "24/7 Roadside Assistance, Mobile Mechanic & Heavy-Duty Towing serving Amarillo and the entire Texas Panhandle.",
+    "etaLabel": "Current dispatch ETA",
+    "etaMinutes": 25,
+    "cta1Label": "🚨 CALL NOW",
+    "cta1Href": "tel:+18065550124",
+    "cta2Label": "GET INSTANT QUOTE",
+    "cta2Href": "#contact",
+    "image": "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1600&q=80"
+  },
+
+  "trust": [
+    { "icon": "verified",    "label": "AAA Certified" },
+    { "icon": "local_police", "label": "DOT #4262689" },
+    { "icon": "shield",      "label": "Licensed & Insured" },
+    { "icon": "translate",   "label": "Hablamos Español" }
+  ],
+
+  "services": [
+    {
+      "id": "emergency-towing",
+      "category": "Towing",
+      "icon": "local_shipping",
+      "title": "Emergency Towing",
+      "shortDesc": "Light, medium & heavy-duty towing across Amarillo and the Panhandle.",
+      "longDesc": "Whether you're stuck on the side of I-40 or stranded in a parking lot, our certified operators arrive fast with the right equipment. Flatbed and wheel-lift options keep your vehicle damage-free during transport.",
+      "pricing": [
+        { "label": "Light Duty (passenger)",  "price": "$95",  "note": "+ $4/mile after 10 mi" },
+        { "label": "Medium Duty (RV/box)",    "price": "$125", "note": "+ $5/mile after 10 mi" },
+        { "label": "Heavy Duty (semi/bus)",   "price": "Call", "note": "for quote" }
+      ],
+      "faq": [
+        { "q": "Can I ride in the tow truck?", "a": "Yes, up to two passengers can ride in the cab. Inform dispatch when calling." },
+        { "q": "Do you tow AWD vehicles?",     "a": "Yes — we always use a flatbed for AWD/4x4 to prevent drivetrain damage." },
+        { "q": "How fast can you arrive?",     "a": "Average dispatch time is 22–28 minutes inside city limits." }
+      ],
+      "badge": "Most Common",
+      "image": "https://images.unsplash.com/photo-1597007030739-6d2e7172ee0e?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "flat-tire-repair",
+      "category": "Roadside",
+      "icon": "tire_repair",
+      "title": "Flat Tire Repair",
+      "shortDesc": "Fast tire change, plug, or patch service anywhere on the highway.",
+      "longDesc": "Blown a tire on I-40? We bring the tools, the spare changeover gear, and the experience to get you rolling again — passenger cars, light trucks, and commercial rigs.",
+      "pricing": [
+        { "label": "Passenger Vehicle",  "price": "$75",  "note": "flat rate" },
+        { "label": "Light Truck / SUV",  "price": "$95",  "note": "flat rate" },
+        { "label": "Commercial / Semi",  "price": "Call", "note": "for quote" }
+      ],
+      "faq": [
+        { "q": "Do you bring a new tire?",     "a": "We change to your spare. If you don't have one, we can tow you to the nearest tire shop." },
+        { "q": "Can you patch on the spot?",   "a": "Yes for plug-able punctures. Sidewall damage requires replacement." }
+      ],
+      "badge": "",
+      "image": "https://images.unsplash.com/photo-1600271886742-f049e4ad7c45?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "battery-jump-start",
+      "category": "Roadside",
+      "icon": "battery_charging_full",
+      "title": "Battery Jump Start",
+      "shortDesc": "High-amperage boost for cars, trucks, and diesel rigs.",
+      "longDesc": "Dead battery? Our heavy-duty jump packs get you started fast. We also test the battery and alternator on-site so you know whether it's just a weak battery or a charging system issue.",
+      "pricing": [
+        { "label": "Standard Vehicle",        "price": "$65",  "note": "flat rate" },
+        { "label": "Diesel / Commercial",     "price": "$95",  "note": "flat rate" },
+        { "label": "Battery Replacement",     "price": "Call", "note": "+ parts" }
+      ],
+      "faq": [
+        { "q": "What if it doesn't start?",    "a": "We test the battery and alternator. If replacement is needed we offer it on-site." }
+      ],
+      "badge": "",
+      "image": "https://images.unsplash.com/photo-1625047509248-ec889cbff17f?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "vehicle-lockout",
+      "category": "Roadside",
+      "icon": "lock_open",
+      "title": "Vehicle Lockout",
+      "shortDesc": "Damage-free lockout service for cars, trucks & smart keys.",
+      "longDesc": "Locked your keys in the car? Our trained operators use professional lockout tools that won't damage your weather stripping, paint, or window. We service standard locks, key-fob systems, and push-start vehicles.",
+      "pricing": [
+        { "label": "Standard Lockout",        "price": "$75",  "note": "flat rate" },
+        { "label": "Smart-Key / Push-Start",  "price": "$95",  "note": "flat rate" },
+        { "label": "Key Fob Programming",     "price": "Call", "note": "for quote" }
+      ],
+      "faq": [
+        { "q": "Will you damage my car?",      "a": "No. We use professional non-marring tools designed for modern vehicles." }
+      ],
+      "badge": "",
+      "image": "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "fuel-delivery",
+      "category": "Roadside",
+      "icon": "local_gas_station",
+      "title": "Fuel Delivery",
+      "shortDesc": "Out of gas? We bring it to you across the Panhandle.",
+      "longDesc": "Ran out of fuel on the highway? We deliver gasoline or diesel to your location 24/7. No need to leave your vehicle on the shoulder.",
+      "pricing": [
+        { "label": "Service Call",            "price": "$85",  "note": "+ fuel cost" },
+        { "label": "Up to 2 gallons included","price": "$0",   "note": "in service call" }
+      ],
+      "faq": [
+        { "q": "Gasoline or diesel?",         "a": "Both. Just tell dispatch which you need." }
+      ],
+      "badge": "",
+      "image": "https://images.unsplash.com/photo-1545262811-3acc1bca7ee9?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "winch-out",
+      "category": "Recovery",
+      "icon": "settings_backup_restore",
+      "title": "Winch-Out & Recovery",
+      "shortDesc": "Stuck in mud, snow, or a ditch? We pull you out.",
+      "longDesc": "From light recoveries to heavy-duty rotator work, we handle vehicles stuck off-road, in mud, snow drifts, ditches, or in jackknife situations on the highway.",
+      "pricing": [
+        { "label": "Light Recovery",          "price": "From $125", "note": "varies by difficulty" },
+        { "label": "Heavy / Rotator",         "price": "Call", "note": "for quote" }
+      ],
+      "faq": [
+        { "q": "Do you handle rollovers?",    "a": "Yes — our heavy-duty rotator handles rollover and jackknife recovery on I-40." }
+      ],
+      "badge": "",
+      "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "mobile-mechanic",
+      "category": "Repair",
+      "icon": "handyman",
+      "title": "Mobile Mechanic",
+      "shortDesc": "On-site diagnostics & repairs for cars, trucks & diesels.",
+      "longDesc": "Avoid the tow when you can. Our mobile mechanics handle alternators, starters, brakes, belts, hoses, electrical, DEF/DPF issues, and more — wherever you broke down.",
+      "pricing": [
+        { "label": "Diagnostic Call",         "price": "$95",  "note": "applied to repair" },
+        { "label": "Repairs",                 "price": "Call", "note": "+ parts" }
+      ],
+      "faq": [
+        { "q": "What can you fix on-site?",   "a": "Most electrical, brake, belt, hose, and starter/alternator jobs. Major engine work needs a shop." }
+      ],
+      "badge": "★ Premium",
+      "image": "https://images.unsplash.com/photo-1486754735734-325b5831c3ad?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "id": "semi-truck-repair",
+      "category": "Commercial",
+      "icon": "rv_hookup",
+      "title": "Semi Truck Repair",
+      "shortDesc": "I-40 mobile diesel repair, air brakes, DPF & DOT.",
+      "longDesc": "Specialized in heavy-duty road service for OTR trucks broken down anywhere on I-40, I-27, US-87, US-287, and US-60. Air brake repair, DPF/DEF, electrical, tires, and DOT inspection support.",
+      "pricing": [
+        { "label": "Service Call",            "price": "$150", "note": "applied to repair" },
+        { "label": "Heavy-Duty Repairs",      "price": "Call", "note": "for quote" }
+      ],
+      "faq": [
+        { "q": "Do you offer NET-30 fleet billing?", "a": "Yes — see our Fleet section. Approved fleets get priority dispatch." },
+        { "q": "DOT inspection on the road?",        "a": "Yes — we can perform mobile DOT inspections and minor repairs to keep you compliant." }
+      ],
+      "badge": "Fleet Priority",
+      "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80"
+    }
+  ],
+
+  "howItWorks": [
+    { "icon": "phone_in_talk",    "title": "Tap to Call",          "desc": "One tap connects you to our 24/7 dispatch team." },
+    { "icon": "send",             "title": "We Dispatch",          "desc": "We send the right truck and text you a live GPS tracking link." },
+    { "icon": "check_circle",     "title": "We Arrive in ~25 min", "desc": "Most calls inside Amarillo city limits are on-scene under 30 minutes." }
+  ],
+
+  "about": {
+    "title": "Texas Panhandle's First Responders for Stranded Drivers",
+    "p1": "Maxwell Roadside has been serving Amarillo and the I-40 corridor for over a decade. Our crews are AAA certified, DOT licensed, and fully insured. We treat every breakdown like an emergency — because to you, it is.",
+    "p2": "From single-mom flat tires in the school pickup line to jackknifed semis on the interstate, our team handles every call with professionalism, fair pricing, and the gear to get you rolling again.",
+    "image": "https://images.unsplash.com/photo-1581094271901-8022df4466f9?auto=format&fit=crop&w=900&q=80"
+  },
+
+  "team": [
+    { "name": "Mike Castillo",   "role": "Lead Heavy-Duty Operator", "bio": "12 years rotator & recovery experience. WreckMaster Level 4 certified.", "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+    { "name": "Jorge Ramirez",   "role": "Mobile Diesel Mechanic",   "bio": "ASE Master Tech. Specializes in DPF, DEF, and air-brake systems.",        "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" },
+    { "name": "Sarah Whitfield", "role": "24/7 Dispatch Lead",       "bio": "Bilingual EN/ES dispatcher. Coordinates response across the Panhandle.",  "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" }
+  ],
+
+  "reviews": [
+    { "author": "Mike T.",   "location": "Canyon, TX",   "rating": 5, "text": "Blew a tire right outside Palo Duro Canyon. These guys were there in 20 minutes. Professional and fast.",  "date": "2025-09-12" },
+    { "author": "Sarah J.",  "location": "Amarillo, TX", "rating": 5, "text": "Locked my keys in the car near the WTAMU library late at night. The driver was super respectful and got me back on the road quick.", "date": "2025-08-28" },
+    { "author": "James R.",  "location": "I-40 Vega",    "rating": 5, "text": "Truck broke down on I-40 west of Amarillo. NET-30 billing for our fleet, on-scene in 35 minutes.",          "date": "2025-08-15" },
+    { "author": "Maria P.",  "location": "Hereford, TX", "rating": 5, "text": "Hablan español y llegaron rápido cuando se descargó la batería. Muy profesionales.",                      "date": "2025-07-30" }
+  ],
+
+  "fleet": {
+    "title": "Fleet & Commercial Accounts",
+    "subtitle": "NET-30 Billing • Priority Dispatch • Insurance Direct-Bill",
+    "body": "Trucking companies, regional fleets, and insurance partners across the Texas Panhandle rely on Maxwell Roadside for 24/7 commercial response. We offer dedicated dispatch lines, NET-30 invoicing, direct billing to your insurance carrier, and DOT-compliant heavy-duty equipment including 75-ton rotator service.",
+    "image": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80"
+  },
+
+  "serviceAreas": [
+    { "city": "Amarillo",   "state": "TX", "driveTime": "Base of operations", "slug": "amarillo-tx" },
+    { "city": "Canyon",     "state": "TX", "driveTime": "15 min south",       "slug": "canyon-tx" },
+    { "city": "Hereford",   "state": "TX", "driveTime": "45 min SW",          "slug": "hereford-tx" },
+    { "city": "Dumas",      "state": "TX", "driveTime": "55 min N",           "slug": "dumas-tx" },
+    { "city": "Pampa",      "state": "TX", "driveTime": "60 min NE",          "slug": "pampa-tx" },
+    { "city": "Borger",     "state": "TX", "driveTime": "55 min NE",          "slug": "borger-tx" },
+    { "city": "Vega",       "state": "TX", "driveTime": "30 min W on I-40",   "slug": "vega-tx" },
+    { "city": "Groom",      "state": "TX", "driveTime": "45 min E on I-40",   "slug": "groom-tx" },
+    { "city": "Shamrock",   "state": "TX", "driveTime": "90 min E on I-40",   "slug": "shamrock-tx" },
+    { "city": "Tucumcari",  "state": "NM", "driveTime": "2 hr W on I-40",     "slug": "tucumcari-nm" }
+  ],
+
+  "highways": [
+    { "name": "I-40",   "label": "Interstate 40 — Amarillo to Shamrock & Tucumcari" },
+    { "name": "I-27",   "label": "Interstate 27 — Amarillo to Lubbock corridor" },
+    { "name": "US-87",  "label": "US Route 87" },
+    { "name": "US-287", "label": "US Route 287" },
+    { "name": "US-60",  "label": "US Route 60" }
+  ],
+
+  "pages": [
+    {
+      "id": "our-story",
+      "title": "Our Story",
+      "metaDescription": "Learn how Maxwell Roadside became the Texas Panhandle's most trusted 24/7 emergency dispatch service.",
+      "showInNav": false,
+      "blocks": [
+        { "type": "heading",   "content": "Our Story",                                "level": "h1", "align": "center" },
+        { "type": "paragraph", "content": "Maxwell Roadside started with a single tow truck and a promise: when someone is stranded, the response has to be fast, fair, and honest." },
+        { "type": "paragraph", "content": "Today, our crews cover the entire Texas Panhandle — from I-40 west to Tucumcari and east to Shamrock, plus the I-27 corridor south to Canyon. We're AAA certified, DOT licensed, fully insured, and proudly bilingual." },
+        { "type": "image",     "src": "https://images.unsplash.com/photo-1581094271901-8022df4466f9?auto=format&fit=crop&w=1200&q=80", "alt": "Maxwell crew", "caption": "Our heavy-duty fleet ready for dispatch" },
+        { "type": "heading",   "content": "Our Promise",                              "level": "h2", "align": "left" },
+        { "type": "paragraph", "content": "Transparent pricing. No bait-and-switch. The number we quote on the phone is the number you pay when we arrive." }
+      ]
+    },
+    {
+      "id": "pricing",
+      "title": "Transparent Pricing",
+      "metaDescription": "Honest, flat-rate pricing for towing, jump starts, lockouts, fuel delivery, and winch-out service in Amarillo, TX.",
+      "showInNav": true,
+      "blocks": [
+        { "type": "heading",   "content": "Transparent, Flat-Rate Pricing",          "level": "h1", "align": "center" },
+        { "type": "paragraph", "content": "No hidden fees. No surprise charges. The price we quote is the price you pay." },
+        { "type": "divider" },
+        { "type": "heading",   "content": "Standard City-Limit Rates",               "level": "h2", "align": "left" },
+        { "type": "paragraph", "content": "Light-Duty Tow: $95 hookup + $4/mile after 10 mi\nMedium-Duty Tow: $125 hookup + $5/mile after 10 mi\nJump Start: $65 flat\nLockout: $75 flat\nFuel Delivery: $85 + fuel cost\nWinch-Out: from $125 (varies by difficulty)" },
+        { "type": "paragraph", "content": "* Heavy-duty / commercial / semi-truck pricing is by-quote. Call dispatch for an exact rate." },
+        { "type": "spacer",    "size": "medium" },
+        { "type": "link",      "label": "📞 Call for Quote",                          "href": "tel:+18065550124", "style": "button", "newTab": false }
+      ]
+    },
+    {
+      "id": "service-area",
+      "title": "Service Area",
+      "metaDescription": "Maxwell Roadside covers Amarillo, the entire I-40 corridor, I-27, and a 100-mile radius across the Texas Panhandle.",
+      "showInNav": false,
+      "blocks": [
+        { "type": "heading",   "content": "Where We Dispatch",                       "level": "h1", "align": "left" },
+        { "type": "paragraph", "content": "Our service area covers a 100-mile radius from Amarillo, including the entire I-40 corridor from Tucumcari NM to Shamrock TX, the I-27 corridor south to Canyon, and US-87/US-287/US-60 across the Panhandle." },
+        { "type": "heading",   "content": "Cities Served",                           "level": "h2", "align": "left" },
+        { "type": "paragraph", "content": "Amarillo • Canyon • Hereford • Dumas • Pampa • Borger • Vega • Groom • Shamrock • Stratford • Spearman • Tulia • Claude • Panhandle • Bushland • Wildorado • Adrian • Conway • Tucumcari NM" },
+        { "type": "divider" },
+        { "type": "heading",   "content": "I-40 Exit Coverage",                      "level": "h2", "align": "left" },
+        { "type": "paragraph", "content": "Exit 22 Adrian • Exit 36 Vega • Exit 60 Bushland • Exit 64 Soncy Rd • Exit 70 Coulter • Exit 73 Bell • Exit 75 Western • Exit 76 Georgia • Exit 78 Washington • Exit 81 Ross-Osage • Exit 85 Whitaker • Exit 96 Lakeside • Exit 110 Conway • Exit 124 Groom • Exit 132 Alanreed • Exit 152 Shamrock" }
+      ]
+    }
+  ],
+
+  "popup": {
+    "enabled": false,
+    "image": "",
+    "altText": "Free Jump Start Promo",
+    "link": "",
+    "delay": 5
+  },
+
+  "seo": {
+    "defaultTitle": "24/7 Roadside Assistance Amarillo TX | Maxwell Roadside — (806) 555-0124",
+    "defaultDescription": "Stranded on I-40 or stuck in Amarillo? Maxwell Roadside delivers 24/7 towing, mobile mechanic, jump starts, lockouts, fuel & flat tire service across the Texas Panhandle. Avg ETA 25 min. Hablamos Español.",
+    "defaultKeywords": "roadside assistance Amarillo TX, 24 hour towing Amarillo, mobile mechanic Texas Panhandle, semi truck repair I-40, flat tire change, jump start, lockout, fuel delivery, winch out, heavy duty wrecker",
+    "geoRegion": "US-TX",
+    "geoPlacename": "Amarillo",
+    "geoLat": "35.2006",
+    "geoLng": "-101.8210",
+    "canonicalBase": "https://maxwellroadside.com",
+    "phone": "+1-806-555-0124",
+    "dotNumber": "DOT #4262689",
+    "ratingValue": "4.9",
+    "reviewCount": "247"
+  },
+
+  "animations": {
+    "hero":     "scramble-reveal",
+    "trust":    "fade-up",
+    "services": "stagger-fade",
+    "about":    "fade-right",
+    "team":     "fade-up",
+    "reviews":  "fade-up",
+    "fleet":    "zoom-in",
+    "contact":  "fade-up"
+  },
+
+  "theme": {
+    "dark": {
+      "bg": "#0a1628",
+      "surface": "#1a2235",
+      "surface-alt": "#121c2e",
+      "surface-deep": "#080e1a",
+      "surface-emphasis": "#1e2940",
+      "text": "#f0eded",
+      "text-muted": "#8a9ab5",
+      "border": "#2a3650",
+      "cta": "#e10600",
+      "cta-hover": "#930300",
+      "accent": "#ecc300",
+      "header-bg": "#041a3f"
+    },
+    "light": {
+      "bg": "#fcf9f8",
+      "surface": "#ffffff",
+      "surface-alt": "#f6f3f2",
+      "surface-deep": "#f0eded",
+      "surface-emphasis": "#eae7e7",
+      "text": "#1c1b1b",
+      "text-muted": "#5e3f3a",
+      "border": "#936e68",
+      "cta": "#b30400",
+      "cta-hover": "#e10600",
+      "accent": "#715c00",
+      "header-bg": "#1a2235"
+    },
+    "defaultMode": "auto",
+    "showToggle": true
+  }
+}

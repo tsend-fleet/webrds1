@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Maxwell Roadside — Visual Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; margin: 0; height: 100vh; overflow: hidden; }
+    h1,h2,h3 { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+    input, select { background: #020617; border: 1px solid #334155; color: #f1f5f9; padding: 0.5rem; width: 100%; border-radius: 4px; font-size: 0.85rem; }
+    input:focus, select:focus { outline: 2px solid #10b981; }
+    label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.25rem; }
+
+    #topbar { position: fixed; top: 0; left: 0; right: 0; height: 52px; background: #0f172a; border-bottom: 1px solid #1e293b; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; }
+    #topbar h1 { color: #10b981; font-size: 1rem; font-weight: 800; }
+    .btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.4rem 0.7rem; background: #1e293b; border: 1px solid #334155; color: #f1f5f9; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .btn:hover { background: #334155; }
+    .btn-primary { background: #059669; border-color: #047857; }
+    .btn-primary:hover { background: #047857; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-danger { background: #991b1b; border-color: #7f1d1d; }
+    .btn-active { background: #047857; border-color: #10b981; }
+
+    #body-wrap { display: flex; position: fixed; top: 52px; bottom: 0; left: 0; right: 0; }
+    #sidebar { width: 220px; background: #0f172a; border-right: 1px solid #1e293b; padding: 1rem; overflow-y: auto; flex-shrink: 0; }
+    #sidebar h3 { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; margin: 1rem 0 0.5rem; letter-spacing: 0.05em; }
+    .tool-btn { display: block; width: 100%; padding: 0.5rem; background: transparent; border: 1px solid transparent; color: #cbd5e1; text-align: left; font-size: 0.85rem; cursor: pointer; border-radius: 4px; margin-bottom: 0.25rem; }
+    .tool-btn:hover { background: #1e293b; color: #10b981; }
+
+    #canvas-wrap { flex: 1; background: #1e293b; padding: 1rem; overflow: auto; display: flex; justify-content: center; align-items: flex-start; }
+    #ve-iframe { background: white; border: 0; transition: width 0.3s ease; box-shadow: 0 8px 32px rgba(0,0,0,0.5); display: block; height: calc(100vh - 100px); }
+
+    #token-strip { position: fixed; top: 52px; left: 220px; right: 0; background: #1e293b; border-bottom: 1px solid #334155; padding: 0.75rem 1rem; z-index: 40; display: none; }
+    #token-strip.open { display: block; }
+
+    #edit-panel { position: fixed; top: 52px; right: 0; bottom: 0; width: 320px; background: #0f172a; border-left: 1px solid #1e293b; padding: 1rem; transform: translateX(100%); transition: transform 0.3s ease; z-index: 60; overflow-y: auto; }
+    #edit-panel.open { transform: translateX(0); }
+
+    #ve-toast-host { position: fixed; top: 70px; right: 1rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+
+    #gate { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #020617; z-index: 100; }
+    #gate form { background: #0f172a; border: 1px solid #1e293b; padding: 1.5rem; border-radius: 8px; width: 90%; max-width: 360px; }
+  </style>
+</head>
+<body>
+
+<!-- Gate -->
+<div id="gate">
+  <form id="gate-form">
+    <h1 class="text-emerald-400 font-bold text-xl mb-2">Visual Editor</h1>
+    <p class="text-slate-400 text-sm mb-4">Maxwell Roadside — Click-to-Edit</p>
+    <label>Password<input type="password" id="gate-pwd" autofocus required></label>
+    <p id="gate-err" class="text-red-400 text-sm hidden mt-2">Wrong password.</p>
+    <button type="submit" class="btn btn-primary w-full justify-center mt-3">Unlock</button>
+  </form>
+</div>
+
+<!-- Topbar -->
+<header id="topbar" style="display:none">
+  <div class="flex items-center gap-3">
+    <h1>🎨 Maxwell Visual Editor</h1>
+  </div>
+  <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1 bg-slate-800 rounded p-1">
+      <button class="btn btn-active" data-device="desktop"><span class="material-symbols-outlined text-base">desktop_windows</span></button>
+      <button class="btn" data-device="tablet"><span class="material-symbols-outlined text-base">tablet</span></button>
+      <button class="btn" data-device="mobile"><span class="material-symbols-outlined text-base">smartphone</span></button>
+    </div>
+    <button class="btn" id="toggle-token">🔑 Token</button>
+    <a href="admin.html" class="btn">📝 Form Admin</a>
+    <a href="index.html" target="_blank" class="btn">👁 Open Site</a>
+    <button id="publish-btn" class="btn btn-primary" disabled>📤 Publish</button>
+  </div>
+</header>
+
+<div id="token-strip">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-3xl">
+    <label>Repo (owner/repo)<input id="repo-input" placeholder="username/repository"></label>
+    <label>Fine-Grained PAT<input type="password" id="token-input" placeholder="github_pat_…"></label>
+  </div>
+  <div class="flex gap-2 mt-2">
+    <button class="btn btn-primary" id="save-token">Save</button>
+    <button class="btn btn-danger" id="clear-token">Clear</button>
+    <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" class="btn">Generate Token →</a>
+  </div>
+</div>
+
+<!-- Body -->
+<div id="body-wrap" style="display:none">
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <h3>📍 Navigate</h3>
+    <button class="tool-btn" data-section="home">Home</button>
+    <button class="tool-btn" data-section="services">Services</button>
+    <button class="tool-btn" data-section="how">How It Works</button>
+    <button class="tool-btn" data-section="about">About</button>
+    <button class="tool-btn" data-section="team">Team</button>
+    <button class="tool-btn" data-section="reviews">Reviews</button>
+    <button class="tool-btn" data-section="fleet">Fleet</button>
+    <button class="tool-btn" data-section="contact">Contact</button>
+
+    <h3>⚡ Quick Edit</h3>
+    <label>Brand<input id="qe-brand"></label>
+    <label>Announcement<input id="qe-announcement"></label>
+    <label>Phone (E.164)<input id="qe-phone"></label>
+    <label>Email<input id="qe-email"></label>
+    <label>ETA Minutes<input id="qe-eta" type="number"></label>
+
+    <h3>🛠 Tools</h3>
+    <button class="tool-btn" id="tool-reload">↻ Reload Content</button>
+    <button class="tool-btn" id="tool-popup">📢 Toggle Popup</button>
+    <button class="tool-btn" id="tool-theme">◐ Toggle Light/Dark</button>
+    <button class="tool-btn" id="tool-seo">🔍 Run SEO Audit (console)</button>
+  </aside>
+
+  <!-- Canvas -->
+  <main id="canvas-wrap">
+    <iframe id="ve-iframe" src="index.html" style="width:100%"></iframe>
+  </main>
+</div>
+
+<!-- Edit Panel -->
+<aside id="edit-panel">
+  <div class="flex justify-between items-center mb-3">
+    <h2 class="text-emerald-400 font-bold">Edit Field</h2>
+    <button class="btn" id="panel-close">✕</button>
+  </div>
+  <p id="panel-key" class="text-xs text-slate-500 mb-2"></p>
+  <label id="panel-label-wrap">Value
+    <div id="panel-input-wrap"></div>
+  </label>
+  <div class="flex gap-2 mt-4">
+    <button class="btn btn-primary flex-1 justify-center" id="panel-apply">✓ Apply</button>
+    <button class="btn flex-1 justify-center" id="panel-cancel">Cancel</button>
+  </div>
+  <div id="panel-preview-wrap" class="mt-4"></div>
+</aside>
+
+<div id="ve-toast-host"></div>
+
+<script src="delta-engine.js"></script>
+<script>
+const ADMIN_PASSWORD = 'RDSIDE123';
+const E = DeltaEngine;
+let DATA = null;
+let dirty = false;
+let currentEdit = null;
+
+// ===== Toast =====
+function veToast(msg, kind='info') {
+  const host = document.getElementById('ve-toast-host');
+  const colors = { success:'#059669', error:'#dc2626', info:'#1e293b' };
+  const el = document.createElement('div');
+  el.style.cssText = `background:${colors[kind]};color:#fff;padding:.6rem .9rem;border-radius:6px;font:500 13px Inter;box-shadow:0 4px 12px rgba(0,0,0,.4);transform:translateX(20px);opacity:0;transition:all .3s;pointer-events:auto;`;
+  el.textContent = msg;
+  host.appendChild(el);
+  requestAnimationFrame(() => { el.style.transform='translateX(0)'; el.style.opacity='1'; });
+  setTimeout(() => { el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, 3000);
+}
+
+// ===== Gate =====
+const gate = document.getElementById('gate');
+if (sessionStorage.getItem('delta_ve_unlocked')==='1') unlock();
+document.getElementById('gate-form').addEventListener('submit', e => {
+  e.preventDefault();
+  if (document.getElementById('gate-pwd').value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('delta_ve_unlocked','1'); unlock();
+  } else document.getElementById('gate-err').classList.remove('hidden');
+});
+
+async function unlock() {
+  gate.style.display = 'none';
+  document.getElementById('topbar').style.display = 'flex';
+  document.getElementById('body-wrap').style.display = 'flex';
+  document.getElementById('repo-input').value = localStorage.getItem('delta_repo_path') || '';
+  document.getElementById('token-input').value = localStorage.getItem('delta_gh_token') || '';
+  try { DATA = await E.loadContent(); }
+  catch(e) { DATA = {}; veToast('Could not load content.json','error'); }
+  populateQuickEdit();
+}
+
+function populateQuickEdit() {
+  document.getElementById('qe-brand').value = DATA.brand || '';
+  document.getElementById('qe-announcement').value = DATA.announcement || '';
+  document.getElementById('qe-phone').value = DATA.phone || '';
+  document.getElementById('qe-email').value = DATA.email || '';
+  document.getElementById('qe-eta').value = (DATA.hero && DATA.hero.etaMinutes) || '';
+}
+
+// ===== Token =====
+document.getElementById('toggle-token').onclick = () => document.getElementById('token-strip').classList.toggle('open');
+document.getElementById('save-token').onclick = () => {
+  localStorage.setItem('delta_repo_path', document.getElementById('repo-input').value.trim());
+  localStorage.setItem('delta_gh_token',  document.getElementById('token-input').value.trim());
+  veToast('Saved','success');
+};
+document.getElementById('clear-token').onclick = () => {
+  localStorage.removeItem('delta_repo_path');
+  localStorage.removeItem('delta_gh_token');
+  document.getElementById('repo-input').value='';
+  document.getElementById('token-input').value='';
+  veToast('Cleared','info');
+};
+
+// ===== Device switcher =====
+const iframe = document.getElementById('ve-iframe');
+document.querySelectorAll('[data-device]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-device]').forEach(x => x.classList.remove('btn-active'));
+  b.classList.add('btn-active');
+  const d = b.getAttribute('data-device');
+  iframe.style.width = d === 'desktop' ? '100%' : d === 'tablet' ? '768px' : '375px';
+}));
+
+// ===== Iframe injection =====
+iframe.addEventListener('load', () => {
+  const idoc = iframe.contentDocument;
+  const iwin = iframe.contentWindow;
+  if (!idoc) return;
+  if (idoc.body && idoc.body.getAttribute('data-delta-app') !== 'public') return;
+
+  const style = idoc.createElement('style');
+  style.textContent = `
+    [data-delta] { position: relative; outline: 1px dashed transparent; transition: outline 0.15s; cursor: pointer; }
+    [data-delta]:hover { outline: 2px dashed #10b981 !important; outline-offset: 2px; }
+    .delta-ve-active { outline: 2px solid #10b981 !important; outline-offset: 2px; }
+  `;
+  idoc.head.appendChild(style);
+
+  idoc.querySelectorAll('[data-delta]').forEach(el => {
+    const key = el.getAttribute('data-delta');
+    if (!key || key.startsWith('nav.') || key.includes('.list') || key.includes('.grid') || key.includes('.map')) return;
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      idoc.querySelectorAll('.delta-ve-active').forEach(x => x.classList.remove('delta-ve-active'));
+      el.classList.add('delta-ve-active');
+      const isImg = el.tagName === 'IMG' || (el.style && el.style.backgroundImage);
+      const tag = el.tagName.toLowerCase();
+      const type = isImg ? 'url' : (tag === 'p' || tag === 'textarea' ? 'textarea' : 'text');
+      const val = isImg ? (el.tagName === 'IMG' ? el.src : (el.style.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/)||[])[1]) : el.textContent.trim();
+      openPanel(key, key, val, type);
+    }, true);
+  });
+});
+
+// ===== Edit Panel =====
+function openPanel(key, label, value, type) {
+  currentEdit = { key, type };
+  document.getElementById('panel-key').textContent = 'Path: ' + key;
+  const wrap = document.getElementById('panel-input-wrap');
+  if (type === 'textarea') wrap.innerHTML = `<textarea rows="5">${E.escHtml(value||'')}</textarea>`;
+  else wrap.innerHTML = `<input type="${type}" value="${(value||'').replace(/"/g,'&quot;')}">`;
+  document.getElementById('edit-panel').classList.add('open');
+  if (type === 'url') {
+    const prev = document.getElementById('panel-preview-wrap');
+    prev.innerHTML = `<label>Preview</label><img id="panel-preview" src="${E.normalizeImageUrl(value)}" style="max-height:120px;width:100%;object-fit:cover;border:1px solid #334155;">`;
+    wrap.querySelector('input').addEventListener('input', e => {
+      document.getElementById('panel-preview').src = E.normalizeImageUrl(e.target.value);
+    });
+  } else {
+    document.getElementById('panel-preview-wrap').innerHTML = '';
+  }
+  setTimeout(() => { const f = wrap.querySelector('input,textarea'); if (f) f.focus(); }, 100);
+}
+function closePanel() {
+  document.getElementById('edit-panel').classList.remove('open');
+  currentEdit = null;
+  const idoc = iframe.contentDocument;
+  if (idoc) idoc.querySelectorAll('.delta-ve-active').forEach(x => x.classList.remove('delta-ve-active'));
+}
+document.getElementById('panel-close').onclick = closePanel;
+document.getElementById('panel-cancel').onclick = closePanel;
+document.getElementById('panel-apply').onclick = () => {
+  if (!currentEdit) return;
+  const f = document.querySelector('#panel-input-wrap input, #panel-input-wrap textarea');
+  if (!f) return;
+  const newVal = f.value;
+  setNested(DATA, currentEdit.key, newVal);
+  // Live update iframe DOM
+  const idoc = iframe.contentDocument;
+  if (idoc) {
+    idoc.querySelectorAll(`[data-delta="${currentEdit.key}"]`).forEach(el => {
+      if (currentEdit.type === 'url') {
+        if (el.tagName === 'IMG') el.src = E.normalizeImageUrl(newVal);
+        else el.style.backgroundImage = `url('${E.normalizeImageUrl(newVal)}')`;
+      } else el.textContent = newVal;
+    });
+  }
+  markDirty(true);
+  populateQuickEdit();
+  closePanel();
+  veToast('Field updated — Publish to push to GitHub','success');
+};
+
+function setNested(obj, path, val) {
+  const parts = path.split('.'); let cur = obj;
+  parts.slice(0,-1).forEach(k => { if (!cur[k]) cur[k]={}; cur=cur[k]; });
+  cur[parts[parts.length-1]] = val;
+}
+
+function markDirty(v) {
+  dirty = v;
+  const btn = document.getElementById('publish-btn');
+  btn.disabled = !v;
+  btn.classList.toggle('btn-active', v);
+}
+
+// ===== Publish =====
+document.getElementById('publish-btn').onclick = async () => {
+  const token = localStorage.getItem('delta_gh_token');
+  const repo  = localStorage.getItem('delta_repo_path');
+  if (!token || !repo) { veToast('Set repo + token first','error'); return; }
+  try {
+    await E.commitContent(token, repo, DATA, 'Visual editor update');
+    veToast('Published!','success');
+    markDirty(false);
+  } catch(e) { veToast('Push failed: '+e.message,'error'); }
+};
+
+// ===== Sidebar Section Nav =====
+document.querySelectorAll('[data-section]').forEach(b => b.onclick = () => {
+  const sec = b.getAttribute('data-section');
+  const idoc = iframe.contentDocument;
+  if (!idoc) return;
+  const target = idoc.getElementById(sec);
+  if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+// ===== Quick Edit =====
+function quickBind(id, key, type='text') {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => {
+    let v = type === 'number' ? (parseInt(el.value,10) || 0) : el.value;
+    setNested(DATA, key, v);
+    // Propagate to iframe
+    const idoc = iframe.contentDocument;
+    const iwin = iframe.contentWindow;
+    if (idoc) {
+      idoc.querySelectorAll(`[data-delta="${key}"]`).forEach(x => x.textContent = v);
+      // Phone special-case: re-run mobile CTA bar
+      if (key === 'phone' && iwin && iwin.DeltaEngine) iwin.DeltaEngine.bindMobileCTABar(DATA);
+      if (key === 'phone') idoc.querySelectorAll('a[data-delta-href="phone"]').forEach(a => a.href = 'tel:' + v);
+    }
+    markDirty(true);
+  });
+}
+quickBind('qe-brand','brand');
+quickBind('qe-announcement','announcement');
+quickBind('qe-phone','phone');
+quickBind('qe-email','email');
+quickBind('qe-eta','hero.etaMinutes','number');
+
+// ===== Tools =====
+document.getElementById('tool-reload').onclick = async () => {
+  if (dirty && !confirm('Discard unsaved changes?')) return;
+  DATA = await E.loadContent();
+  populateQuickEdit();
+  iframe.src = iframe.src;
+  markDirty(false);
+  veToast('Reloaded','success');
+};
+document.getElementById('tool-popup').onclick = () => {
+  if (!DATA.popup) DATA.popup = {};
+  DATA.popup.enabled = !DATA.popup.enabled;
+  markDirty(true);
+  veToast('Popup ' + (DATA.popup.enabled ? 'enabled' : 'disabled'),'info');
+};
+document.getElementById('tool-theme').onclick = () => {
+  const iwin = iframe.contentWindow;
+  if (iwin && iwin.DeltaEngine) {
+    const cur = iwin.DeltaEngine.getThemeMode();
+    iwin.DeltaEngine.setThemeMode(cur === 'dark' ? 'light' : 'dark');
+    veToast('Theme: ' + (cur === 'dark' ? 'light' : 'dark'),'info');
+  }
+};
+document.getElementById('tool-seo').onclick = () => {
+  const idoc = iframe.contentDocument;
+  if (!idoc) return;
+  console.group('🔍 SEO Audit — ' + (DATA.brand || ''));
+  console.log('Title:', idoc.title);
+  console.log('Meta description:', (idoc.querySelector('meta[name="description"]')||{}).content);
+  console.log('Meta keywords:', (idoc.querySelector('meta[name="keywords"]')||{}).content);
+  console.log('Canonical:', (idoc.querySelector('link[rel="canonical"]')||{}).href);
+  console.log('Open Graph title:', (idoc.querySelector('meta[property="og:title"]')||{}).content);
+  console.log('Twitter card:', (idoc.querySelector('meta[name="twitter:card"]')||{}).content);
+  const ld = idoc.querySelector('script[id="delta-jsonld"]');
+  console.log('JSON-LD LocalBusiness:', ld ? JSON.parse(ld.textContent) : 'MISSING');
+  const faq = idoc.querySelector('script[id="delta-faq-jsonld"]');
+  console.log('JSON-LD FAQPage:', faq ? JSON.parse(faq.textContent) : 'MISSING');
+  console.groupEnd();
+  veToast('SEO audit logged to browser console','success');
+};
+</script>
+</body>
+</html>

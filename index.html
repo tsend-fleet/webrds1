@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Anti-FOUC theme bootstrap (MUST be before Tailwind) -->
+  <script>
+    (function(){
+      var m = localStorage.getItem('delta_theme_mode') || 'auto';
+      if (m === 'auto') m = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.classList.add(m === 'light' ? 'light' : 'dark');
+    })();
+  </script>
+
+  <title>Maxwell Roadside — 24/7 Roadside Assistance Amarillo TX</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'background':               'var(--c-bg)',
+            'on-background':            'var(--c-text)',
+            'surface':                  'var(--c-surface)',
+            'surface-container':        'var(--c-surface)',
+            'surface-container-low':    'var(--c-surface-alt)',
+            'surface-container-lowest': 'var(--c-surface-deep)',
+            'surface-container-high':   'var(--c-surface-emphasis)',
+            'on-surface':               'var(--c-text)',
+            'on-surface-variant':       'var(--c-text-muted)',
+            'outline':                  'var(--c-border)',
+            'tertiary':                 'var(--c-accent)',
+            'cta':                      'var(--c-cta)',
+            'cta-hover':                'var(--c-cta-hover)',
+            'header-bg':                'var(--c-header-bg)',
+            'primary':                  '#b30400',
+            'on-primary':               '#ffffff',
+            'primary-container':        '#e10600',
+            'on-primary-container':     '#fff2f0',
+            'on-primary-fixed-variant': '#930300',
+            'secondary-fixed':          '#d9e2ff',
+            'on-secondary-fixed':       '#041a3f',
+            'tertiary-fixed':           '#ffe17a',
+            'tertiary-fixed-dim':       '#ecc300',
+            'on-tertiary-fixed':        '#231b00',
+            'surface-tint':             '#c00500',
+            'inverse-surface':          '#313030',
+            'on-inverse-surface':       '#f3f0ef',
+            'error':                    '#ba1a1a',
+          },
+          fontFamily: {
+            'display-hero': ['Manrope'],
+            'headline-lg':  ['Manrope'],
+            'headline-md':  ['Manrope'],
+            'phone-number': ['Manrope'],
+            'body-lg':      ['Inter'],
+            'body-md':      ['Inter'],
+            'label-caps':   ['Inter'],
+          },
+          fontSize: {
+            'display-hero': ['clamp(2.25rem,5vw,3rem)', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '800' }],
+            'headline-lg':  ['clamp(1.75rem,4vw,2rem)', { lineHeight: '1.2', fontWeight: '800' }],
+            'headline-md':  ['1.5rem', { lineHeight: '1.3', fontWeight: '700' }],
+            'phone-number': ['2.5rem',  { lineHeight: '1', fontWeight: '800' }],
+            'body-lg':      ['1.125rem',{ lineHeight: '1.6', fontWeight: '500' }],
+            'body-md':      ['1rem',    { lineHeight: '1.5', fontWeight: '400' }],
+            'label-caps':   ['0.875rem',{ lineHeight: '1', letterSpacing: '0.05em', fontWeight: '700' }],
+          },
+          spacing: {
+            'margin-mobile':    '20px',
+            'gutter':           '16px',
+            'touch-target-min': '56px',
+            'stack-gap':        '24px',
+            'margin-desktop':   '40px',
+            'unit':             '8px',
+          },
+          borderRadius: {
+            DEFAULT: '0.125rem',
+            lg: '0.25rem',
+            xl: '0.5rem',
+            full: '0.75rem',
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+    .nav-link { position: relative; }
+    .nav-link::after { content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px; background:var(--c-cta); transition:width .3s; }
+    .nav-link:hover::after { width:100%; }
+  </style>
+</head>
+
+<body data-delta-app="public" class="bg-background text-on-background antialiased pb-24 md:pb-0 min-h-screen flex flex-col">
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div data-section="announcement" class="bg-cta text-on-primary text-center text-xs sm:text-sm font-bold uppercase tracking-wider py-2 px-4">
+    <span data-delta="announcement">24/7 Emergency Dispatch — Call now</span>
+  </div>
+
+  <!-- HEADER -->
+  <header data-delta-anim="header" class="sticky top-0 z-[100] bg-surface border-b-2 border-outline">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-margin-desktop h-16 md:h-20">
+      <div class="flex items-center gap-3">
+        <button data-delta-trigger="mobile-nav" aria-label="Menu" class="md:hidden flex items-center justify-center w-12 h-12 text-on-background hover:bg-surface-container-low transition-colors rounded-DEFAULT">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="text-lg md:text-xl font-black text-cta uppercase tracking-tighter italic">
+          <span data-delta="brand">Maxwell Roadside</span>
+        </a>
+      </div>
+
+      <nav data-delta="nav.desktop" class="hidden md:flex items-center gap-8"></nav>
+
+      <div class="flex items-center gap-2">
+        <button data-delta-trigger="theme-toggle" aria-label="Toggle theme" class="hidden md:flex items-center justify-center w-10 h-10 text-on-background hover:bg-surface-container-low rounded-full transition-colors">
+          <span class="material-symbols-outlined" data-delta-theme-icon="dark">light_mode</span>
+          <span class="material-symbols-outlined" data-delta-theme-icon="light" style="display:none">dark_mode</span>
+        </button>
+        <a data-delta-href="phone" href="tel:" class="btn-magnetic hidden md:inline-flex items-center gap-2 bg-cta text-on-primary h-12 px-5 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-cta-hover transition-colors active:scale-95">
+          <span class="material-symbols-outlined">call</span>
+          <span data-delta="phoneDisplay">(806) 555-0124</span>
+        </a>
+        <a data-delta-href="phone" href="tel:" class="md:hidden inline-flex items-center justify-center bg-cta text-on-primary w-12 h-12 border-2 border-outline">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">call</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <nav data-delta-target="mobile-nav" class="md:hidden fixed inset-y-0 right-0 w-3/4 max-w-xs bg-surface border-l-2 border-outline transform translate-x-full transition-transform duration-300 z-[101] pt-20 overflow-y-auto" aria-label="Mobile navigation">
+      <div data-delta="nav.mobile"></div>
+      <div class="p-4 border-t border-outline/30 mt-4 flex items-center justify-between">
+        <span class="text-on-surface-variant text-sm">Theme</span>
+        <button data-delta-trigger="theme-toggle" aria-label="Toggle theme" class="flex items-center justify-center w-10 h-10 text-on-background hover:bg-surface-container-low rounded-full transition-colors">
+          <span class="material-symbols-outlined" data-delta-theme-icon="dark">light_mode</span>
+          <span class="material-symbols-outlined" data-delta-theme-icon="light" style="display:none">dark_mode</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-1">
+
+    <!-- HERO -->
+    <section id="home" class="relative w-full min-h-[640px] md:min-h-[720px] flex flex-col justify-center overflow-hidden">
+      <div data-delta="hero.image" class="absolute inset-0 z-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1600&q=80')"></div>
+      <div class="absolute inset-0 z-10 bg-black/60 md:bg-gradient-to-r md:from-black/85 md:to-black/30"></div>
+
+      <div data-delta-anim="hero-content" class="relative z-20 px-margin-mobile md:px-margin-desktop py-12 max-w-5xl mx-auto md:mx-0 md:ml-margin-desktop flex flex-col gap-stack-gap text-on-inverse-surface">
+        <div data-delta-anim="eta-badge" class="inline-flex items-center gap-2 bg-tertiary-fixed text-on-tertiary-fixed px-4 py-2 border-2 border-on-primary-fixed-variant w-fit">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">timer</span>
+          <span class="font-label-caps text-label-caps uppercase">
+            <span data-delta="hero.etaLabel">Current dispatch ETA</span>: ~<span data-delta="hero.etaMinutes">25</span> min
+          </span>
+        </div>
+
+        <h1 data-delta="hero.title" class="font-display-hero text-display-hero text-white">Stuck on I-40? We're 22 Minutes Away.</h1>
+        <p data-delta="hero.subtitle" class="font-body-lg text-body-lg text-white/90 max-w-2xl">
+          24/7 Roadside Assistance, Mobile Mechanic & Heavy-Duty Towing serving Amarillo and the Texas Panhandle.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 mt-2">
+          <a data-delta="hero.cta1" href="tel:" class="btn-magnetic flex items-center justify-center gap-3 bg-cta text-on-primary h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-on-primary-fixed-variant hover:bg-cta-hover transition-colors active:scale-95">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">call</span>
+            🚨 CALL NOW
+          </a>
+          <a data-delta="hero.cta2" href="#contact" class="btn-magnetic flex items-center justify-center gap-3 bg-tertiary-fixed text-on-tertiary-fixed h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-on-primary-fixed-variant hover:bg-tertiary-fixed-dim transition-colors active:scale-95">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">request_quote</span>
+            GET INSTANT QUOTE
+          </a>
+        </div>
+
+        <div data-section="trust" class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/20 pt-5 text-white/90">
+          <div data-delta="trust.list" class="flex flex-wrap items-center gap-x-6 gap-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-background">
+      <div class="max-w-7xl mx-auto flex flex-col gap-stack-gap">
+        <div class="text-center md:text-left">
+          <h2 class="font-headline-lg text-headline-lg text-on-background">What Do You Need Right Now?</h2>
+          <p class="font-body-md text-on-surface-variant mt-2">Tap a service for details, pricing & FAQ — or just call us.</p>
+        </div>
+        <div data-section="services" data-delta="services.grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-surface-container-low border-y-2 border-outline">
+      <div class="max-w-5xl mx-auto flex flex-col gap-stack-gap">
+        <h2 class="font-headline-lg text-headline-lg text-on-background text-center">How It Works</h2>
+        <div data-delta="howItWorks.list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" data-section="about" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-background">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="flex flex-col gap-4 order-2 md:order-1">
+          <h2 data-delta="about.title" class="font-headline-lg text-headline-lg text-on-background">About Us</h2>
+          <p data-delta="about.p1" class="font-body-lg text-body-lg text-on-surface-variant"></p>
+          <p data-delta="about.p2" class="font-body-md text-body-md text-on-surface-variant"></p>
+        </div>
+        <div class="aspect-video order-1 md:order-2 overflow-hidden border-2 border-outline">
+          <img data-delta="about.image" src="" alt="About" class="w-full h-full object-cover" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section id="team" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-surface-container-low border-y-2 border-outline">
+      <div class="max-w-7xl mx-auto flex flex-col gap-stack-gap">
+        <div class="text-center">
+          <h2 class="font-headline-lg text-headline-lg text-on-background">Meet the Crew</h2>
+          <p class="font-body-md text-on-surface-variant mt-2">Certified, professional, and ready to roll 24/7.</p>
+        </div>
+        <div data-section="team" data-delta="team.list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="reviews" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-background">
+      <div class="max-w-7xl mx-auto flex flex-col gap-stack-gap">
+        <div class="text-center">
+          <h2 class="font-headline-lg text-headline-lg text-on-background">Real Reviews from Real Drivers</h2>
+        </div>
+        <div data-section="reviews" data-delta="reviews.list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- FLEET / COMMERCIAL -->
+    <section id="fleet" data-section="fleet" class="relative bg-header-bg text-white py-16 md:py-24 px-margin-mobile md:px-margin-desktop overflow-hidden">
+      <div data-delta="fleet.image" class="absolute inset-0 bg-cover bg-center opacity-25"></div>
+      <div class="relative max-w-5xl mx-auto flex flex-col gap-4 text-center">
+        <h2 data-delta="fleet.title" class="font-headline-lg text-headline-lg text-tertiary-fixed-dim">Fleet & Commercial</h2>
+        <p data-delta="fleet.subtitle" class="font-body-lg text-body-lg text-white"></p>
+        <p data-delta="fleet.body" class="font-body-md text-body-md text-white/90 max-w-3xl mx-auto"></p>
+        <div class="mt-4">
+          <a data-delta-href="phone" href="tel:" class="btn-magnetic inline-flex items-center justify-center gap-3 bg-cta text-on-primary h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-tertiary-fixed-dim hover:bg-cta-hover transition-colors active:scale-95">
+            <span class="material-symbols-outlined">phone_forwarded</span>
+            CONTACT FLEET DESK
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" data-section="contact" class="py-16 md:py-20 px-margin-mobile md:px-margin-desktop bg-background">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-background">Request Dispatch</h2>
+            <p class="font-body-md text-on-surface-variant mt-2">Need help right now? Call us — it's faster. Or send the form below and we'll call you back within 2 minutes.</p>
+          </div>
+
+          <form data-delta="contact.form" class="flex flex-col gap-4 bg-surface-container border-2 border-outline p-6">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <label class="flex flex-col gap-1">
+                <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Your Name</span>
+                <input type="text" name="name" required class="h-12 bg-surface-container-lowest border-2 border-outline px-3 text-on-background focus:border-cta focus:outline-none">
+              </label>
+              <label class="flex flex-col gap-1">
+                <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Phone</span>
+                <input type="tel" name="phone" required class="h-12 bg-surface-container-lowest border-2 border-outline px-3 text-on-background focus:border-cta focus:outline-none">
+              </label>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <label class="flex flex-col gap-1">
+                <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Vehicle Type</span>
+                <select name="vehicleType" required class="h-12 bg-surface-container-lowest border-2 border-outline px-3 text-on-background focus:border-cta focus:outline-none">
+                  <option value="">Select…</option>
+                  <option>Passenger Car</option>
+                  <option>SUV / Light Truck</option>
+                  <option>RV / Motorhome</option>
+                  <option>Commercial Truck</option>
+                  <option>Semi / Tractor-Trailer</option>
+                  <option>Motorcycle</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-1">
+                <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Service Needed</span>
+                <select name="serviceNeeded" required class="h-12 bg-surface-container-lowest border-2 border-outline px-3 text-on-background focus:border-cta focus:outline-none"></select>
+              </label>
+            </div>
+
+            <label class="flex flex-col gap-1">
+              <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Location / Mile Marker</span>
+              <input type="text" name="location" required placeholder="e.g. I-40 Exit 75 Western, Amarillo" class="h-12 bg-surface-container-lowest border-2 border-outline px-3 text-on-background focus:border-cta focus:outline-none">
+            </label>
+
+            <label class="flex flex-col gap-1">
+              <span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Additional Notes</span>
+              <textarea name="notes" rows="3" class="bg-surface-container-lowest border-2 border-outline px-3 py-2 text-on-background focus:border-cta focus:outline-none"></textarea>
+            </label>
+
+            <input type="hidden" name="_subject" value="New dispatch request — Maxwell Roadside">
+
+            <button type="submit" class="btn-magnetic flex items-center justify-center gap-2 bg-cta text-on-primary h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-cta-hover transition-colors active:scale-95">
+              <span class="material-symbols-outlined">send</span>
+              SEND DISPATCH REQUEST
+            </button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          <div class="bg-surface-container border-2 border-outline p-6 flex flex-col gap-3">
+            <h3 class="font-headline-md text-headline-md text-on-background">Dispatch HQ</h3>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-cta">call</span>
+              <a data-delta-href="phone" href="tel:" class="font-phone-number text-phone-number text-cta hover:text-cta-hover transition-colors">
+                <span data-delta="phoneDisplay">(806) 555-0124</span>
+              </a>
+            </div>
+            <div class="flex items-start gap-3"><span class="material-symbols-outlined text-cta">mail</span><span data-delta="email" class="text-on-background"></span></div>
+            <div class="flex items-start gap-3"><span class="material-symbols-outlined text-cta">location_on</span><span data-delta="address" class="text-on-background"></span></div>
+            <div class="flex items-start gap-3"><span class="material-symbols-outlined text-cta">schedule</span><span data-delta="hoursWeekday" class="text-on-background"></span></div>
+            <p data-delta="dispatchNote" class="text-sm text-on-surface-variant italic mt-2"></p>
+          </div>
+
+          <div class="aspect-video border-2 border-outline overflow-hidden">
+            <iframe data-delta="contact.map" src="" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-header-bg text-white py-12 px-margin-mobile md:px-margin-desktop border-t-4 border-tertiary-fixed-dim">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="flex flex-col gap-3">
+        <span class="text-xl font-black text-cta uppercase italic"><span data-delta="brand">Maxwell Roadside</span></span>
+        <p class="text-white/70 text-sm"><span data-delta="tagline"></span></p>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold uppercase text-tertiary-fixed-dim text-sm tracking-wider">Services</h4>
+        <a href="service.html?id=emergency-towing" class="text-white/80 hover:text-cta transition-colors text-sm">Emergency Towing</a>
+        <a href="service.html?id=flat-tire-repair" class="text-white/80 hover:text-cta transition-colors text-sm">Flat Tire Repair</a>
+        <a href="service.html?id=battery-jump-start" class="text-white/80 hover:text-cta transition-colors text-sm">Jump Start</a>
+        <a href="service.html?id=fuel-delivery" class="text-white/80 hover:text-cta transition-colors text-sm">Fuel Delivery</a>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold uppercase text-tertiary-fixed-dim text-sm tracking-wider">Company</h4>
+        <a href="page.html?id=our-story" class="text-white/80 hover:text-cta transition-colors text-sm">Our Story</a>
+        <a href="page.html?id=pricing" class="text-white/80 hover:text-cta transition-colors text-sm">Pricing</a>
+        <a href="page.html?id=service-area" class="text-white/80 hover:text-cta transition-colors text-sm">Service Area</a>
+        <a href="#contact" class="text-white/80 hover:text-cta transition-colors text-sm">Contact</a>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold uppercase text-tertiary-fixed-dim text-sm tracking-wider">Dispatch</h4>
+        <a data-delta-href="phone" href="tel:" class="font-phone-number text-3xl text-cta hover:text-cta-hover transition-colors">
+          <span data-delta="phoneDisplay">(806) 555-0124</span>
+        </a>
+        <p class="text-white/70 text-sm"><span data-delta="hoursWeekday"></span></p>
+        <p class="text-white/70 text-xs italic"><span data-delta="address"></span></p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-white/20 text-white/60 text-xs flex flex-col md:flex-row justify-between gap-2">
+      <span>© <span data-delta="brand">Maxwell Roadside</span>. 24/7 First Responder Service.</span>
+      <span>Texas Panhandle • I-40 • I-27 • US-87 • US-287</span>
+    </div>
+  </footer>
+
+  <!-- STICKY MOBILE CTA BAR -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-stretch justify-around bg-header-bg border-t-4 border-tertiary-fixed-dim shadow-[0_-4px_12px_rgba(0,0,0,0.4)] h-20" aria-label="Emergency dispatch actions">
+    <a data-delta-trigger="call" href="tel:" class="flex flex-col items-center justify-center bg-cta text-on-primary w-full h-full font-label-caps text-label-caps uppercase hover:bg-cta-hover active:bg-on-primary-fixed-variant transition-colors duration-100" aria-label="Call us">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings:'FILL' 1;">call</span>
+      CALL
+    </a>
+    <a data-delta-trigger="text" href="sms:" class="flex flex-col items-center justify-center text-white w-full h-full font-label-caps text-label-caps uppercase hover:bg-cta active:bg-cta-hover transition-colors duration-100" aria-label="Text us">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings:'FILL' 1;">chat</span>
+      TEXT
+    </a>
+    <button data-delta-trigger="location" class="flex flex-col items-center justify-center text-white w-full h-full font-label-caps text-label-caps uppercase hover:bg-cta active:bg-cta-hover transition-colors duration-100" aria-label="Share location">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings:'FILL' 1;">location_on</span>
+      LOCATION
+    </button>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="delta-engine.js"></script>
+</body>
+</html>

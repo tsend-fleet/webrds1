@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Maxwell Roadside — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+    h1,h2,h3,h4 { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+    input, textarea, select { background: #020617; border: 1px solid #334155; color: #f1f5f9; padding: 0.5rem; width: 100%; border-radius: 4px; font-size: 0.9rem; }
+    input:focus, textarea:focus, select:focus { outline: 2px solid #10b981; border-color: #10b981; }
+    label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.25rem; }
+    button { transition: all 0.15s; }
+    details summary { cursor: pointer; }
+    details summary::marker { color: #10b981; }
+    .row { background: #0f172a; border: 1px solid #1e293b; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px; }
+    .chip { display: inline-flex; align-items: center; gap: 0.25rem; background: #1e293b; border: 1px solid #334155; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; }
+    .chip button { color: #94a3b8; background: transparent; padding: 0; }
+    .chip button:hover { color: #f87171; }
+    .btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.5rem 0.85rem; background: #1e293b; border: 1px solid #334155; color: #f1f5f9; border-radius: 4px; font-size: 0.85rem; font-weight: 600; }
+    .btn:hover { background: #334155; }
+    .btn-primary { background: #059669; border-color: #047857; }
+    .btn-primary:hover { background: #047857; }
+    .btn-danger { background: #991b1b; border-color: #7f1d1d; color: #fee2e2; }
+    .btn-danger:hover { background: #7f1d1d; }
+    .btn-tiny { padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+<!-- Login Gate -->
+<div id="gate" class="min-h-screen flex items-center justify-center p-4">
+  <form id="gate-form" class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-lg p-6 flex flex-col gap-4">
+    <h1 class="text-2xl font-bold text-emerald-400">Admin Access</h1>
+    <p class="text-sm text-slate-400">Maxwell Roadside — Self-Editing Console</p>
+    <label>Password
+      <input type="password" id="gate-pwd" autofocus required>
+    </label>
+    <p id="gate-err" class="text-red-400 text-sm hidden">Wrong password.</p>
+    <button type="submit" class="btn btn-primary w-full justify-center">Unlock</button>
+  </form>
+</div>
+
+<!-- Main App -->
+<div id="app" class="hidden max-w-7xl mx-auto p-4 md:p-6">
+
+  <!-- Topbar -->
+  <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 pb-4 border-b border-slate-800">
+    <div>
+      <h1 class="text-xl font-bold text-emerald-400">Maxwell Roadside Admin</h1>
+      <p class="text-xs text-slate-500">Form-Based Editor • Push to GitHub</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="admin1.html" class="btn">🎨 Visual Editor</a>
+      <a href="index.html" target="_blank" class="btn">👁 Preview Site</a>
+      <button id="reload-btn" class="btn">↻ Reload</button>
+      <button id="save-btn" class="btn btn-primary">💾 Save & Push</button>
+      <button id="logout-btn" class="btn btn-danger">Logout</button>
+    </div>
+  </header>
+
+  <!-- Token Strip -->
+  <details class="bg-slate-900 border border-slate-800 rounded p-4 mb-4">
+    <summary class="font-bold text-emerald-400">🔑 GitHub Configuration</summary>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+      <label>Repo Path (owner/repo)
+        <input type="text" id="repo-input" placeholder="username/repository">
+      </label>
+      <label>Fine-Grained PAT (github_pat_…)
+        <input type="password" id="token-input" placeholder="github_pat_…">
+      </label>
+    </div>
+    <div class="flex gap-2 mt-3">
+      <button id="save-token" class="btn btn-primary">Save Credentials</button>
+      <button id="clear-token" class="btn btn-danger">Clear</button>
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" class="btn">Generate Token →</a>
+    </div>
+    <p class="text-xs text-slate-400 mt-2">Required scope: <code>Repository → Contents → Read and Write</code></p>
+  </details>
+
+  <!-- Sections -->
+  <div id="sections" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+
+  <!-- Raw JSON -->
+  <details class="bg-slate-900 border border-slate-800 rounded p-4 mt-4">
+    <summary class="font-bold text-emerald-400">📋 Raw JSON Preview</summary>
+    <pre id="json-preview" class="mt-3 p-3 bg-slate-950 border border-slate-800 rounded overflow-auto text-xs text-slate-300 max-h-96 whitespace-pre-wrap"></pre>
+  </details>
+
+</div>
+
+<script src="delta-engine.js"></script>
+<script>
+const ADMIN_PASSWORD = 'RDSIDE123';
+const E = DeltaEngine;
+let DATA = null;
+
+const DEFAULT_KEYWORD_BANK = {
+  primary: ['roadside assistance Amarillo TX','24 hour roadside assistance Amarillo','mobile mechanic Amarillo TX','emergency roadside service Amarillo','truck breakdown service Amarillo I-40','24/7 towing Amarillo TX','semi truck repair Amarillo Texas','heavy duty towing Amarillo','flat tire change Amarillo','car battery jump start Amarillo','locked out of car Amarillo','fuel delivery Amarillo TX','winch out service Amarillo','I-40 roadside assistance Texas Panhandle'],
+  longTail: ['roadside assistance near me Amarillo','tow truck near me Amarillo open now','mobile mechanic near me 24 hours Amarillo','cheap tow truck Amarillo TX','emergency tire change near me','dead battery jumpstart near me Amarillo','gas delivery near me Amarillo','car lockout service near me Amarillo','RV tire repair Amarillo','motorcycle towing Amarillo','EV towing Amarillo Tesla','diesel mechanic on call Amarillo','DOT inspection roadside repair Amarillo','trailer tire blowout repair I-40','semi truck jumpstart Texas Panhandle','air brake repair on the road Amarillo'],
+  geoCity: ['roadside assistance Canyon TX','tow truck Hereford TX 24/7','mobile mechanic Dumas TX','truck repair Pampa TX','semi truck repair Borger TX','roadside service Vega TX I-40','towing Groom TX I-40','roadside assistance Shamrock TX I-40','tow truck Bushland TX I-40','mechanic Wildorado TX','roadside Adrian TX I-40','tow truck Tucumcari NM I-40'],
+  i40Exits: ['tow truck I-40 exit 22 Adrian TX','roadside assistance I-40 exit 36 Vega','mobile mechanic I-40 exit 60 Bushland','tow truck I-40 exit 64 Soncy Rd Amarillo','roadside I-40 exit 75 Western Amarillo','mobile mechanic I-40 exit 76 Georgia Amarillo','tow truck I-40 exit 96 Lakeside','roadside I-40 exit 110 Conway TX','tow truck I-40 exit 124 Groom TX','roadside I-40 exit 152 Shamrock TX'],
+  fleet: ['fleet roadside service Amarillo','commercial truck account towing Texas Panhandle','NET-30 fleet billing Amarillo','DOT compliant towing Amarillo','insurance approved tow company Amarillo','direct bill insurance towing','heavy duty rotator service Amarillo','75 ton rotator crane service','cargo recovery I-40 Texas','HazMat towing certified Amarillo','24/7 dispatch commercial fleet'],
+  problemAware: ['my truck broke down on I-40','semi truck overheating on I-40','flat tire on the highway Texas Panhandle','locked keys in car Amarillo','ran out of gas I-40 Amarillo','car wont start Amarillo TX','dead battery in parking lot Amarillo','jackknife semi truck I-40','truck stuck in mud Texas Panhandle','trailer tire blowout I-40','diesel wont start cold Amarillo'],
+  lsi: ['AAA certified','ASE certified','licensed and insured','USDOT','24/7 dispatch','fast response','30-minute ETA','no membership required','upfront pricing','transparent pricing','family owned','locally owned','Texas Panhandle','Hablamos Español','bilingual dispatch','GPS tracking','real-time arrival'],
+  entities: ['Interstate 40','Interstate 27','US Route 87','US Route 287','US Route 60','Loop 335','Texas Panhandle','Potter County TX','Randall County TX','Palo Duro Canyon','Cadillac Ranch','Route 66','Mother Road','Llano Estacado']
+};
+
+const BUCKET_LABELS = {
+  primary:'A. Primary Money Keywords', longTail:'B. Long-Tail / Near-Me Intent',
+  geoCity:'C. Geo-Modified City', i40Exits:'D. I-40 Exit-Number (UNIQUE MOAT)',
+  fleet:'E. Commercial / Fleet', problemAware:'F. Problem-Aware / Symptom',
+  lsi:'G. LSI / Supporting Terms', entities:'H. Schema-Friendly Entities'
+};
+
+const ANIMATION_OPTIONS = E.ANIMATION_OPTIONS;
+const PREMIUM_ANIMS = E.GSAP_ANIM_KEYS;
+const THEME_TOKENS = E.THEME_TOKENS;
+
+const THEME_TOKEN_LABELS = {
+  bg:'Page Background', surface:'Card / Panel', 'surface-alt':'Alt Section',
+  'surface-deep':'Deepest Container', 'surface-emphasis':'Emphasized / Inputs',
+  text:'Primary Text', 'text-muted':'Muted Text', border:'Outlines / Borders',
+  cta:'Primary CTA (Red)', 'cta-hover':'CTA Hover', accent:'Accent (Yellow)',
+  'header-bg':'Header / Footer Backdrop'
+};
+
+function escAttr(s){ return String(s==null?'':s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function field(label, key, type='text', hint='') {
+  const val = getNested(DATA, key);
+  if (type === 'textarea') {
+    return `<label>${label}<textarea data-key="${key}" rows="3">${E.escHtml(val||'')}</textarea>${hint?`<span class="text-xs text-slate-500 block mt-1">${hint}</span>`:''}</label>`;
+  }
+  return `<label>${label}<input type="${type}" data-key="${key}" value="${escAttr(val||'')}">${hint?`<span class="text-xs text-slate-500 block mt-1">${hint}</span>`:''}</label>`;
+}
+function getNested(obj, path){ return path.split('.').reduce((o,k)=>o&&o[k]!=null?o[k]:'',obj); }
+function setNested(obj, path, val){
+  const parts=path.split('.'); let cur=obj;
+  parts.slice(0,-1).forEach(k=>{ if(!cur[k])cur[k]={}; cur=cur[k]; });
+  cur[parts[parts.length-1]]=val;
+}
+
+// ======================== GATE ========================
+const gate = document.getElementById('gate');
+const app = document.getElementById('app');
+if (sessionStorage.getItem('delta_admin_unlocked')==='1') unlock();
+document.getElementById('gate-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const pwd = document.getElementById('gate-pwd').value;
+  if (pwd === ADMIN_PASSWORD) { sessionStorage.setItem('delta_admin_unlocked','1'); unlock(); }
+  else document.getElementById('gate-err').classList.remove('hidden');
+});
+async function unlock(){
+  gate.classList.add('hidden');
+  app.classList.remove('hidden');
+  document.getElementById('repo-input').value = localStorage.getItem('delta_repo_path') || '';
+  document.getElementById('token-input').value = localStorage.getItem('delta_gh_token') || '';
+  try {
+    DATA = await E.loadContent();
+    seedDefaults();
+    renderAll();
+  } catch(e) {
+    E.toast('Could not load content.json: '+e.message,'error');
+    DATA = {};
+    seedDefaults();
+    renderAll();
+  }
+}
+document.getElementById('logout-btn').onclick = () => { sessionStorage.removeItem('delta_admin_unlocked'); location.reload(); };
+document.getElementById('save-token').onclick = () => {
+  localStorage.setItem('delta_repo_path', document.getElementById('repo-input').value.trim());
+  localStorage.setItem('delta_gh_token',  document.getElementById('token-input').value.trim());
+  E.toast('Credentials saved','success');
+};
+document.getElementById('clear-token').onclick = () => {
+  localStorage.removeItem('delta_repo_path');
+  localStorage.removeItem('delta_gh_token');
+  document.getElementById('repo-input').value='';
+  document.getElementById('token-input').value='';
+  E.toast('Credentials cleared','info');
+};
+document.getElementById('reload-btn').onclick = async () => {
+  if (!confirm('Discard unsaved changes and reload from GitHub?')) return;
+  DATA = await E.loadContent(); seedDefaults(); renderAll();
+  E.toast('Reloaded','success');
+};
+document.getElementById('save-btn').onclick = async () => {
+  const token = localStorage.getItem('delta_gh_token');
+  const repo  = localStorage.getItem('delta_repo_path');
+  if (!token || !repo) { E.toast('Set repo + token first','error'); return; }
+  try {
+    await E.commitContent(token, repo, DATA, 'Update via admin.html');
+    E.toast('Saved & pushed to GitHub','success');
+  } catch(e) { E.toast('Push failed: '+e.message,'error'); }
+};
+
+function seedDefaults(){
+  if (!DATA.seo) DATA.seo = {};
+  if (!DATA.seo.keywordBank || !Object.keys(DATA.seo.keywordBank).length) {
+    DATA.seo.keywordBank = JSON.parse(JSON.stringify(DEFAULT_KEYWORD_BANK));
+  }
+  if (!DATA.seo.metaTemplates) DATA.seo.metaTemplates = {
+    service: '{service.title} {seo.geoPlacename} TX | {brand} 24/7 — {phoneDisplay}',
+    city:    '24/7 Roadside Assistance {city} {state} | {brand} — {phoneDisplay}',
+    exit:    'Tow Truck I-40 Exit {exit} {name} {city} | {brand} — {phoneDisplay}'
+  };
+  if (!DATA.theme) DATA.theme = JSON.parse(JSON.stringify(E.DEFAULT_THEME));
+  if (!DATA.animations) DATA.animations = {};
+  if (!DATA.serviceAreas) DATA.serviceAreas = [];
+  if (!DATA.i40Exits) DATA.i40Exits = [];
+  if (!DATA.pages) DATA.pages = [];
+  if (!DATA.popup) DATA.popup = { enabled:false, image:'', altText:'', link:'', delay:5 };
+}
+
+// ======================== RENDER ========================
+function refreshJsonPreview(){
+  document.getElementById('json-preview').textContent = JSON.stringify(DATA, null, 2);
+}
+
+function renderAll(){
+  const sec = document.getElementById('sections');
+  sec.innerHTML = `
+    <div class="lg:col-span-2">${renderBrand()}</div>
+    ${renderHero()}
+    ${renderTrust()}
+    <div class="lg:col-span-2">${renderServices()}</div>
+    ${renderHowItWorks()}
+    ${renderAbout()}
+    ${renderTeam()}
+    ${renderReviews()}
+    ${renderFleet()}
+    ${renderServiceAreas()}
+    ${renderI40Exits()}
+    ${renderHighways()}
+    ${renderNav()}
+    <div class="lg:col-span-2">${renderPages()}</div>
+    ${renderPopup()}
+    ${renderAnimations()}
+    <div class="lg:col-span-2">${renderSEO()}</div>
+    <div class="lg:col-span-2">${renderTheme()}</div>
+  `;
+  wireInputs();
+  refreshJsonPreview();
+}
+
+// ======== Sections ========
+function panel(title, body, span=false) {
+  return `<details class="bg-slate-900 border border-slate-800 rounded p-4 ${span?'lg:col-span-2':''}" open>
+    <summary class="font-bold text-emerald-400 mb-3">${title}</summary>
+    <div class="flex flex-col gap-3 mt-3">${body}</div>
+  </details>`;
+}
+
+function renderBrand() {
+  return panel('🏷️ Brand & Contact', `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      ${field('Brand','brand')}
+      ${field('Tagline','tagline')}
+      ${field('Phone (E.164)','phone','tel','e.g. +18065550124')}
+      ${field('Phone Display','phoneDisplay','text','(806) 555-0124')}
+      ${field('WhatsApp','whatsapp','tel')}
+      ${field('Email','email','email')}
+      ${field('Address','address')}
+      ${field('Hours Weekday','hoursWeekday')}
+      ${field('Hours Weekend','hoursWeekend')}
+      ${field('Dispatch Note','dispatchNote')}
+    </div>
+    ${field('Announcement Bar','announcement','text','Top emergency strip text')}
+  `);
+}
+
+function renderHero() {
+  return panel('🎯 Hero', `
+    ${field('Title','hero.title')}
+    ${field('Subtitle','hero.subtitle','textarea')}
+    <div class="grid grid-cols-2 gap-3">
+      ${field('ETA Label','hero.etaLabel')}
+      ${field('ETA Minutes','hero.etaMinutes','number')}
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      ${field('CTA 1 Label','hero.cta1Label')}
+      ${field('CTA 1 Href','hero.cta1Href')}
+      ${field('CTA 2 Label','hero.cta2Label')}
+      ${field('CTA 2 Href','hero.cta2Href')}
+    </div>
+    ${field('Image URL','hero.image','url')}
+  `);
+}
+
+function renderTrust() {
+  const items = (DATA.trust||[]).map((t,i) => `
+    <div class="row flex gap-2 items-end">
+      <input class="flex-1" data-list="trust" data-idx="${i}" data-prop="icon" placeholder="Material icon" value="${escAttr(t.icon||'')}">
+      <input class="flex-[2]" data-list="trust" data-idx="${i}" data-prop="label" placeholder="Label" value="${escAttr(t.label||'')}">
+      <button class="btn btn-tiny" data-list-up="trust" data-idx="${i}">↑</button>
+      <button class="btn btn-tiny" data-list-down="trust" data-idx="${i}">↓</button>
+      <button class="btn btn-danger btn-tiny" data-list-rm="trust" data-idx="${i}">✕</button>
+    </div>`).join('');
+  return panel('✅ Trust Strip', items + `<button class="btn btn-primary w-fit" data-list-add="trust" data-template='{"icon":"verified","label":"New trust"}'>+ Add Trust Item</button>`);
+}
+
+function renderServices() {
+  const items = (DATA.services||[]).map((s,i) => `
+    <div class="row">
+      <div class="flex justify-between items-center mb-2">
+        <strong class="text-emerald-400">${E.escHtml(s.title||'(untitled)')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-tiny" data-list-up="services" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="services" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="services" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label>Slug (id)<input data-list="services" data-idx="${i}" data-prop="id" value="${escAttr(s.id||'')}"></label>
+        <label>Category<input data-list="services" data-idx="${i}" data-prop="category" value="${escAttr(s.category||'')}"></label>
+        <label>Title<input data-list="services" data-idx="${i}" data-prop="title" value="${escAttr(s.title||'')}"></label>
+        <label>Icon<input data-list="services" data-idx="${i}" data-prop="icon" value="${escAttr(s.icon||'')}"></label>
+        <label>Badge<input data-list="services" data-idx="${i}" data-prop="badge" value="${escAttr(s.badge||'')}"></label>
+        <label>Image URL<input data-list="services" data-idx="${i}" data-prop="image" type="url" value="${escAttr(s.image||'')}"></label>
+      </div>
+      <label class="mt-2 block">Short Description<textarea data-list="services" data-idx="${i}" data-prop="shortDesc" rows="2">${E.escHtml(s.shortDesc||'')}</textarea></label>
+      <label class="block">Long Description<textarea data-list="services" data-idx="${i}" data-prop="longDesc" rows="3">${E.escHtml(s.longDesc||'')}</textarea></label>
+
+      <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800">
+        <strong class="text-xs text-slate-400 uppercase">Pricing</strong>
+        ${(s.pricing||[]).map((p,pi)=>`
+          <div class="flex gap-1 mt-1">
+            <input class="flex-1" data-sub="services.${i}.pricing" data-sub-idx="${pi}" data-prop="label" placeholder="Label" value="${escAttr(p.label||'')}">
+            <input class="w-24" data-sub="services.${i}.pricing" data-sub-idx="${pi}" data-prop="price" placeholder="$0" value="${escAttr(p.price||'')}">
+            <input class="flex-1" data-sub="services.${i}.pricing" data-sub-idx="${pi}" data-prop="note" placeholder="Note" value="${escAttr(p.note||'')}">
+            <button class="btn btn-danger btn-tiny" data-sub-rm="services.${i}.pricing" data-sub-idx="${pi}">✕</button>
+          </div>`).join('')}
+        <button class="btn btn-tiny mt-2" data-sub-add="services.${i}.pricing" data-template='{"label":"","price":"","note":""}'>+ Pricing Row</button>
+      </div>
+
+      <div class="mt-2 p-2 bg-slate-950 rounded border border-slate-800">
+        <strong class="text-xs text-slate-400 uppercase">FAQ</strong>
+        ${(s.faq||[]).map((f,fi)=>`
+          <div class="flex gap-1 mt-1">
+            <input class="flex-1" data-sub="services.${i}.faq" data-sub-idx="${fi}" data-prop="q" placeholder="Question" value="${escAttr(f.q||'')}">
+            <input class="flex-[2]" data-sub="services.${i}.faq" data-sub-idx="${fi}" data-prop="a" placeholder="Answer" value="${escAttr(f.a||'')}">
+            <button class="btn btn-danger btn-tiny" data-sub-rm="services.${i}.faq" data-sub-idx="${fi}">✕</button>
+          </div>`).join('')}
+        <button class="btn btn-tiny mt-2" data-sub-add="services.${i}.faq" data-template='{"q":"","a":""}'>+ FAQ Row</button>
+      </div>
+    </div>`).join('');
+  return panel('🛠️ Services', items + `<button class="btn btn-primary w-fit" data-list-add="services" data-template='{"id":"new-service","category":"Roadside","icon":"build","title":"New Service","shortDesc":"","longDesc":"","pricing":[],"faq":[],"badge":"","image":""}'>+ Add Service</button>`, true);
+}
+
+function renderHowItWorks() {
+  const items = (DATA.howItWorks||[]).map((h,i)=>`
+    <div class="row flex gap-1">
+      <input class="w-32" data-list="howItWorks" data-idx="${i}" data-prop="icon" placeholder="Icon" value="${escAttr(h.icon||'')}">
+      <input class="flex-1" data-list="howItWorks" data-idx="${i}" data-prop="title" placeholder="Title" value="${escAttr(h.title||'')}">
+      <input class="flex-[2]" data-list="howItWorks" data-idx="${i}" data-prop="desc" placeholder="Desc" value="${escAttr(h.desc||'')}">
+      <button class="btn btn-tiny" data-list-up="howItWorks" data-idx="${i}">↑</button>
+      <button class="btn btn-tiny" data-list-down="howItWorks" data-idx="${i}">↓</button>
+      <button class="btn btn-danger btn-tiny" data-list-rm="howItWorks" data-idx="${i}">✕</button>
+    </div>`).join('');
+  return panel('📋 How It Works', items + `<button class="btn btn-primary w-fit" data-list-add="howItWorks" data-template='{"icon":"phone_in_talk","title":"Step","desc":"…"}'>+ Add Step</button>`);
+}
+
+function renderAbout() {
+  return panel('ℹ️ About', `
+    ${field('Title','about.title')}
+    ${field('Paragraph 1','about.p1','textarea')}
+    ${field('Paragraph 2','about.p2','textarea')}
+    ${field('Image URL','about.image','url')}
+  `);
+}
+
+function renderTeam() {
+  const items = (DATA.team||[]).map((m,i)=>`
+    <div class="row">
+      <div class="flex justify-between items-center mb-2"><strong>${E.escHtml(m.name||'(unnamed)')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-tiny" data-list-up="team" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="team" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="team" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <label>Name<input data-list="team" data-idx="${i}" data-prop="name" value="${escAttr(m.name||'')}"></label>
+        <label>Role<input data-list="team" data-idx="${i}" data-prop="role" value="${escAttr(m.role||'')}"></label>
+      </div>
+      <label>Bio<textarea data-list="team" data-idx="${i}" data-prop="bio" rows="2">${E.escHtml(m.bio||'')}</textarea></label>
+      <label>Image URL<input type="url" data-list="team" data-idx="${i}" data-prop="image" value="${escAttr(m.image||'')}"></label>
+    </div>`).join('');
+  return panel('👥 Team', items + `<button class="btn btn-primary w-fit" data-list-add="team" data-template='{"name":"New Member","role":"","bio":"","image":""}'>+ Add Team Member</button>`);
+}
+
+function renderReviews() {
+  const items = (DATA.reviews||[]).map((r,i)=>`
+    <div class="row">
+      <div class="flex justify-between items-center mb-2"><strong>${E.escHtml(r.author||'')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-tiny" data-list-up="reviews" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="reviews" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="reviews" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <label>Author<input data-list="reviews" data-idx="${i}" data-prop="author" value="${escAttr(r.author||'')}"></label>
+        <label>Location<input data-list="reviews" data-idx="${i}" data-prop="location" value="${escAttr(r.location||'')}"></label>
+        <label>Rating (1–5)<input type="number" min="1" max="5" data-list="reviews" data-idx="${i}" data-prop="rating" value="${r.rating||5}"></label>
+      </div>
+      <label>Text<textarea data-list="reviews" data-idx="${i}" data-prop="text" rows="2">${E.escHtml(r.text||'')}</textarea></label>
+      <label>Date<input type="date" data-list="reviews" data-idx="${i}" data-prop="date" value="${escAttr(r.date||'')}"></label>
+    </div>`).join('');
+  return panel('⭐ Reviews', items + `<button class="btn btn-primary w-fit" data-list-add="reviews" data-template='{"author":"","location":"","rating":5,"text":"","date":""}'>+ Add Review</button>`);
+}
+
+function renderFleet() {
+  return panel('🚛 Fleet / Commercial', `
+    ${field('Title','fleet.title')}
+    ${field('Subtitle','fleet.subtitle')}
+    ${field('Body','fleet.body','textarea')}
+    ${field('Image URL','fleet.image','url')}
+  `);
+}
+
+function renderServiceAreas() {
+  const items = (DATA.serviceAreas||[]).map((a,i)=>`
+    <div class="row">
+      <div class="flex justify-between items-center mb-2"><strong>${E.escHtml(a.city||'')}, ${E.escHtml(a.state||'')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-primary btn-tiny" data-gen-city="${i}">⚡ Generate Page</button>
+          <button class="btn btn-tiny" data-list-up="serviceAreas" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="serviceAreas" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="serviceAreas" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <label>City<input data-list="serviceAreas" data-idx="${i}" data-prop="city" value="${escAttr(a.city||'')}"></label>
+        <label>State<input data-list="serviceAreas" data-idx="${i}" data-prop="state" value="${escAttr(a.state||'')}"></label>
+        <label>Slug<input data-list="serviceAreas" data-idx="${i}" data-prop="slug" value="${escAttr(a.slug||'')}"></label>
+        <label>Drive Time<input data-list="serviceAreas" data-idx="${i}" data-prop="driveTime" value="${escAttr(a.driveTime||'')}"></label>
+      </div>
+    </div>`).join('');
+  return panel('📍 Service Areas (Cities)', items + `
+    <div class="flex gap-2">
+      <button class="btn btn-primary w-fit" data-list-add="serviceAreas" data-template='{"city":"","state":"TX","slug":"","driveTime":""}'>+ Add City</button>
+      <button class="btn" id="gen-all-cities">⚡ Generate All Missing City Pages</button>
+    </div>`);
+}
+
+function renderI40Exits() {
+  const items = (DATA.i40Exits||[]).map((x,i)=>`
+    <div class="row">
+      <div class="flex justify-between items-center mb-2"><strong>I-40 Exit ${E.escHtml(x.exit||'')} ${E.escHtml(x.name||'')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-primary btn-tiny" data-gen-exit="${i}">⚡ Generate Page</button>
+          <button class="btn btn-tiny" data-list-up="i40Exits" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="i40Exits" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="i40Exits" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <label>Exit #<input data-list="i40Exits" data-idx="${i}" data-prop="exit" value="${escAttr(x.exit||'')}"></label>
+        <label>Name<input data-list="i40Exits" data-idx="${i}" data-prop="name" value="${escAttr(x.name||'')}"></label>
+        <label>City<input data-list="i40Exits" data-idx="${i}" data-prop="city" value="${escAttr(x.city||'')}"></label>
+        <label>Slug<input data-list="i40Exits" data-idx="${i}" data-prop="slug" value="${escAttr(x.slug||'')}"></label>
+      </div>
+    </div>`).join('');
+  return panel('🛣️ I-40 Exit Pages (UNIQUE MOAT)', items + `
+    <div class="flex gap-2">
+      <button class="btn btn-primary w-fit" data-list-add="i40Exits" data-template='{"exit":"","name":"","city":"","slug":""}'>+ Add Exit</button>
+      <button class="btn" id="gen-all-exits">⚡ Generate All Missing Exit Pages</button>
+    </div>`);
+}
+
+function renderHighways() {
+  const items = (DATA.highways||[]).map((h,i)=>`
+    <div class="row flex gap-1">
+      <input class="w-32" data-list="highways" data-idx="${i}" data-prop="name" value="${escAttr(h.name||'')}">
+      <input class="flex-1" data-list="highways" data-idx="${i}" data-prop="label" value="${escAttr(h.label||'')}">
+      <button class="btn btn-danger btn-tiny" data-list-rm="highways" data-idx="${i}">✕</button>
+    </div>`).join('');
+  return panel('🛤️ Highways', items + `<button class="btn btn-primary w-fit" data-list-add="highways" data-template='{"name":"I-40","label":""}'>+ Add Highway</button>`);
+}
+
+function renderNav() {
+  const items = (DATA.nav||[]).map((n,i)=>`
+    <div class="row flex gap-1">
+      <input class="flex-1" data-list="nav" data-idx="${i}" data-prop="label" placeholder="Label" value="${escAttr(n.label||'')}">
+      <input class="flex-[2]" data-list="nav" data-idx="${i}" data-prop="href" placeholder="#anchor or page.html?id=…" value="${escAttr(n.href||'')}">
+      <button class="btn btn-tiny" data-list-up="nav" data-idx="${i}">↑</button>
+      <button class="btn btn-tiny" data-list-down="nav" data-idx="${i}">↓</button>
+      <button class="btn btn-danger btn-tiny" data-list-rm="nav" data-idx="${i}">✕</button>
+    </div>`).join('');
+  return panel('🧭 Navigation', items + `<button class="btn btn-primary w-fit" data-list-add="nav" data-template='{"label":"New","href":"#"}'>+ Add Nav Link</button>`);
+}
+
+function renderPages() {
+  const items = (DATA.pages||[]).map((p,i)=>{
+    const blocks = (p.blocks||[]).map((b,bi)=>`
+      <div class="row bg-slate-950">
+        <div class="flex justify-between items-center mb-2">
+          <strong class="text-xs uppercase text-slate-400">Block ${bi+1}: ${b.type}</strong>
+          <div class="flex gap-1">
+            <button class="btn btn-tiny" data-block-up="${i}" data-block-idx="${bi}">↑</button>
+            <button class="btn btn-tiny" data-block-down="${i}" data-block-idx="${bi}">↓</button>
+            <button class="btn btn-danger btn-tiny" data-block-rm="${i}" data-block-idx="${bi}">✕</button>
+          </div>
+        </div>
+        ${blockFields(i, bi, b)}
+      </div>`).join('');
+    return `<div class="row">
+      <div class="flex justify-between items-center mb-2">
+        <strong class="text-emerald-400">${E.escHtml(p.title||'(untitled page)')}</strong>
+        <div class="flex gap-1">
+          <button class="btn btn-tiny" data-list-up="pages" data-idx="${i}">↑</button>
+          <button class="btn btn-tiny" data-list-down="pages" data-idx="${i}">↓</button>
+          <button class="btn btn-danger btn-tiny" data-list-rm="pages" data-idx="${i}">✕</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <label>Slug<input data-list="pages" data-idx="${i}" data-prop="id" value="${escAttr(p.id||'')}"></label>
+        <label>Title<input data-list="pages" data-idx="${i}" data-prop="title" value="${escAttr(p.title||'')}"></label>
+      </div>
+      <label>Meta Description<textarea data-list="pages" data-idx="${i}" data-prop="metaDescription" rows="2">${E.escHtml(p.metaDescription||'')}</textarea></label>
+      <label class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4" data-list="pages" data-idx="${i}" data-prop="showInNav" ${p.showInNav?'checked':''}> <span>Show in Navigation</span></label>
+      <div class="mt-3"><strong class="text-xs uppercase text-slate-400">Blocks</strong>${blocks}</div>
+      <div class="flex gap-1 flex-wrap mt-2">
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="heading">+ Heading</button>
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="paragraph">+ Paragraph</button>
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="image">+ Image</button>
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="link">+ Link</button>
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="spacer">+ Spacer</button>
+        <button class="btn btn-tiny" data-add-block="${i}" data-block-type="divider">+ Divider</button>
+      </div>
+    </div>`;
+  }).join('');
+  return panel('📄 Pages', items + `<button class="btn btn-primary w-fit" data-list-add="pages" data-template='{"id":"new-page","title":"New Page","metaDescription":"","showInNav":false,"blocks":[{"type":"heading","content":"New Page","level":"h1","align":"center"}]}'>+ New Page</button>`, true);
+}
+
+function blockFields(pi, bi, b) {
+  switch(b.type) {
+    case 'heading': return `
+      <input class="mb-1" data-block-prop="${pi}.${bi}.content" placeholder="Heading text" value="${escAttr(b.content||'')}">
+      <div class="grid grid-cols-2 gap-1">
+        <select data-block-prop="${pi}.${bi}.level">${['h1','h2','h3','h4','h5','h6'].map(l=>`<option value="${l}" ${b.level===l?'selected':''}>${l.toUpperCase()}</option>`).join('')}</select>
+        <select data-block-prop="${pi}.${bi}.align">${['left','center','right'].map(a=>`<option value="${a}" ${b.align===a?'selected':''}>${a}</option>`).join('')}</select>
+      </div>`;
+    case 'paragraph': return `<textarea data-block-prop="${pi}.${bi}.content" rows="3">${E.escHtml(b.content||'')}</textarea>`;
+    case 'image': return `
+      <input data-block-prop="${pi}.${bi}.src" type="url" placeholder="Image URL" value="${escAttr(b.src||'')}">
+      <input data-block-prop="${pi}.${bi}.alt" placeholder="Alt text" value="${escAttr(b.alt||'')}">
+      <input data-block-prop="${pi}.${bi}.caption" placeholder="Caption (optional)" value="${escAttr(b.caption||'')}">`;
+    case 'link': return `
+      <div class="grid grid-cols-2 gap-1">
+        <input data-block-prop="${pi}.${bi}.label" placeholder="Label" value="${escAttr(b.label||'')}">
+        <input data-block-prop="${pi}.${bi}.href" placeholder="Href" value="${escAttr(b.href||'')}">
+      </div>
+      <div class="grid grid-cols-2 gap-1">
+        <select data-block-prop="${pi}.${bi}.style">${['button','outline','text'].map(s=>`<option value="${s}" ${b.style===s?'selected':''}>${s}</option>`).join('')}</select>
+        <label class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4" data-block-prop="${pi}.${bi}.newTab" ${b.newTab?'checked':''}> New Tab</label>
+      </div>`;
+    case 'spacer': return `<select data-block-prop="${pi}.${bi}.size">${['small','medium','large'].map(s=>`<option value="${s}" ${b.size===s?'selected':''}>${s}</option>`).join('')}</select>`;
+    case 'divider': return `<span class="text-slate-500 text-xs italic">No fields</span>`;
+    default: return '';
+  }
+}
+
+function renderPopup() {
+  return panel('📢 Popup', `
+    <label class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4" data-key="popup.enabled" ${DATA.popup.enabled?'checked':''}> <span>Enabled</span></label>
+    ${field('Image URL','popup.image','url')}
+    ${field('Alt Text','popup.altText')}
+    ${field('Click-through Link','popup.link','url')}
+    ${field('Delay (seconds)','popup.delay','number')}
+  `);
+}
+
+function renderAnimations() {
+  const sections = ['hero','trust','services','about','team','reviews','fleet','contact'];
+  const opts = ANIMATION_OPTIONS.map(v => {
+    const isPremium = PREMIUM_ANIMS.includes(v);
+    return `<option value="${v}" ${'(selected)'}>${v}${isPremium?' ★ Premium':''}</option>`;
+  }).join('');
+  return panel('🎬 Animation Engine', sections.map(k => {
+    const cur = DATA.animations[k] || 'fade-up';
+    return `<label>${k} ${PREMIUM_ANIMS.includes(cur)?'<span class="text-amber-400 text-xs ml-2">★ Premium GSAP mode</span>':''}
+      <select data-key="animations.${k}">${ANIMATION_OPTIONS.map(v=>`<option value="${v}" ${cur===v?'selected':''}>${v}${PREMIUM_ANIMS.includes(v)?' ★ Premium':''}</option>`).join('')}</select>
+    </label>`;
+  }).join(''));
+}
+
+function renderSEO() {
+  const buckets = Object.keys(BUCKET_LABELS).map(k => {
+    const list = DATA.seo.keywordBank[k] || [];
+    const chips = list.map((kw,ki)=>`
+      <span class="chip">
+        <span>${E.escHtml(kw)}</span>
+        <button data-kw-rm="${k}" data-kw-idx="${ki}" aria-label="Remove">×</button>
+      </span>`).join('');
+    return `<details class="bg-slate-950 border border-slate-800 rounded p-3 mb-2" open>
+      <summary class="font-bold text-emerald-300">${BUCKET_LABELS[k]} <span class="text-slate-500 text-xs">(${list.length})</span></summary>
+      <div class="flex flex-wrap gap-2 mt-3">${chips || '<span class="text-slate-500 text-xs italic">No keywords yet</span>'}</div>
+      <form class="flex gap-1 mt-3" data-kw-add="${k}">
+        <input class="flex-1" placeholder="Add keyword/phrase…">
+        <button type="submit" class="btn btn-primary btn-tiny">+ Add</button>
+      </form>
+    </details>`;
+  }).join('');
+
+  return panel('🔍 SEO & Schema', `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      ${field('Default Title','seo.defaultTitle')}
+      ${field('Canonical Base','seo.canonicalBase','url')}
+      ${field('Geo Region','seo.geoRegion','text','e.g. US-TX')}
+      ${field('Geo Placename','seo.geoPlacename','text','e.g. Amarillo')}
+      ${field('Geo Lat','seo.geoLat')}
+      ${field('Geo Lng','seo.geoLng')}
+      ${field('Phone (E.164)','seo.phone','text','for schema')}
+      ${field('DOT Number','seo.dotNumber')}
+      ${field('Rating Value','seo.ratingValue','number')}
+      ${field('Review Count','seo.reviewCount','number')}
+      ${field('Service Radius (meters)','seo.serviceRadiusMeters','number','160934 = 100 mi')}
+    </div>
+    ${field('Default Description','seo.defaultDescription','textarea')}
+    ${field('Default Keywords (auto-generated from buckets)','seo.defaultKeywords','textarea')}
+
+    <div class="mt-4 p-3 bg-slate-950 border border-slate-800 rounded">
+      <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+        <h3 class="font-bold text-emerald-400">🗂️ Keyword Bank — 8 Buckets</h3>
+        <div class="flex gap-2">
+          <button class="btn btn-tiny" id="kw-regen">🔄 Regenerate defaultKeywords</button>
+          <button class="btn btn-tiny" id="kw-restore">♻️ Apply Default Bank</button>
+          <button class="btn btn-tiny" id="kw-export">📋 Export CSV</button>
+        </div>
+      </div>
+      ${buckets}
+    </div>
+
+    <div class="mt-4 p-3 bg-slate-950 border border-slate-800 rounded">
+      <h3 class="font-bold text-emerald-400 mb-2">📝 Meta Templates (auto-generated pages)</h3>
+      <p class="text-xs text-slate-500 mb-2">Placeholders: {brand} {phoneDisplay} {seo.geoPlacename} {service.title} {city} {state} {exit} {name}</p>
+      ${field('Service page title','seo.metaTemplates.service')}
+      ${field('City page title','seo.metaTemplates.city')}
+      ${field('I-40 Exit page title','seo.metaTemplates.exit')}
+    </div>
+  `, true);
+}
+
+function renderTheme() {
+  const t = DATA.theme;
+  function row(palette, key) {
+    const v = (t[palette] && t[palette][key]) || E.DEFAULT_THEME[palette][key];
+    return `<div class="flex gap-1 items-center">
+      <span class="text-xs text-slate-400 w-32">${THEME_TOKEN_LABELS[key]}</span>
+      <input type="color" class="w-12 h-9 p-0 border-0" data-theme="${palette}.${key}" value="${v}">
+      <input class="flex-1" data-theme="${palette}.${key}" value="${v}">
+    </div>`;
+  }
+  return panel('🎨 Theme & Colors', `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <label>Default Mode<select data-key="theme.defaultMode">${['dark','light','auto'].map(v=>`<option value="${v}" ${t.defaultMode===v?'selected':''}>${v}</option>`).join('')}</select></label>
+      <label class="flex items-center gap-2 mt-6"><input type="checkbox" class="w-4 h-4" data-key="theme.showToggle" ${t.showToggle!==false?'checked':''}> <span>Show theme toggle button</span></label>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+      <div class="p-3 bg-slate-950 rounded border border-slate-800">
+        <div class="flex justify-between mb-2"><strong class="text-slate-300">🌙 Dark Palette</strong>
+          <button class="btn btn-tiny" data-reset-palette="dark">Reset</button></div>
+        ${THEME_TOKENS.map(k=>row('dark',k)).join('')}
+      </div>
+      <div class="p-3 bg-slate-950 rounded border border-slate-800">
+        <div class="flex justify-between mb-2"><strong class="text-slate-300">☀️ Light Palette</strong>
+          <button class="btn btn-tiny" data-reset-palette="light">Reset</button></div>
+        ${THEME_TOKENS.map(k=>row('light',k)).join('')}
+      </div>
+    </div>
+    <div class="flex gap-2 mt-3">
+      <button class="btn" data-preview-palette="dark">👁 Preview Dark</button>
+      <button class="btn" data-preview-palette="light">👁 Preview Light</button>
+    </div>
+  `, true);
+}
+
+// ======================== INPUT WIRING ========================
+function wireInputs(){
+  // Top-level keys (data-key)
+  document.querySelectorAll('[data-key]').forEach(el => {
+    el.addEventListener('input', () => {
+      let val = el.type === 'checkbox' ? el.checked : el.value;
+      if (el.type === 'number') val = parseFloat(val) || 0;
+      setNested(DATA, el.getAttribute('data-key'), val);
+      refreshJsonPreview();
+    });
+  });
+
+  // List item edits (data-list)
+  document.querySelectorAll('[data-list]').forEach(el => {
+    el.addEventListener('input', () => {
+      const list = el.getAttribute('data-list');
+      const idx  = parseInt(el.getAttribute('data-idx'), 10);
+      const prop = el.getAttribute('data-prop');
+      let val = el.type === 'checkbox' ? el.checked : el.value;
+      if (el.type === 'number') val = parseFloat(val) || 0;
+      DATA[list][idx][prop] = val;
+      refreshJsonPreview();
+    });
+  });
+
+  // Sub-array edits (data-sub on services pricing/faq)
+  document.querySelectorAll('[data-sub]').forEach(el => {
+    el.addEventListener('input', () => {
+      const path = el.getAttribute('data-sub'); // e.g. services.0.pricing
+      const idx  = parseInt(el.getAttribute('data-sub-idx'), 10);
+      const prop = el.getAttribute('data-prop');
+      const arr = path.split('.').reduce((o,k)=>o[k], DATA);
+      arr[idx][prop] = el.value;
+      refreshJsonPreview();
+    });
+  });
+
+  // Block edits
+  document.querySelectorAll('[data-block-prop]').forEach(el => {
+    el.addEventListener('input', () => {
+      const [pi, bi, prop] = el.getAttribute('data-block-prop').split('.');
+      let val = el.type === 'checkbox' ? el.checked : el.value;
+      DATA.pages[pi].blocks[bi][prop] = val;
+      refreshJsonPreview();
+    });
+  });
+
+  // List CRUD buttons
+  document.querySelectorAll('[data-list-add]').forEach(b => b.onclick = () => {
+    const list = b.getAttribute('data-list-add');
+    const tmpl = JSON.parse(b.getAttribute('data-template'));
+    if (!DATA[list]) DATA[list] = [];
+    DATA[list].push(JSON.parse(JSON.stringify(tmpl)));
+    renderAll();
+  });
+  document.querySelectorAll('[data-list-rm]').forEach(b => b.onclick = () => {
+    const list = b.getAttribute('data-list-rm');
+    const idx = parseInt(b.getAttribute('data-idx'),10);
+    if (confirm('Remove this item?')) { DATA[list].splice(idx,1); renderAll(); }
+  });
+  document.querySelectorAll('[data-list-up]').forEach(b => b.onclick = () => {
+    const list = b.getAttribute('data-list-up'); const idx = parseInt(b.getAttribute('data-idx'),10);
+    if (idx>0) { [DATA[list][idx-1], DATA[list][idx]] = [DATA[list][idx], DATA[list][idx-1]]; renderAll(); }
+  });
+  document.querySelectorAll('[data-list-down]').forEach(b => b.onclick = () => {
+    const list = b.getAttribute('data-list-down'); const idx = parseInt(b.getAttribute('data-idx'),10);
+    if (idx<DATA[list].length-1) { [DATA[list][idx+1], DATA[list][idx]] = [DATA[list][idx], DATA[list][idx+1]]; renderAll(); }
+  });
+
+  // Sub-array CRUD
+  document.querySelectorAll('[data-sub-add]').forEach(b => b.onclick = () => {
+    const path = b.getAttribute('data-sub-add');
+    const tmpl = JSON.parse(b.getAttribute('data-template'));
+    const arr = path.split('.').reduce((o,k)=>o[k], DATA);
+    arr.push(JSON.parse(JSON.stringify(tmpl)));
+    renderAll();
+  });
+  document.querySelectorAll('[data-sub-rm]').forEach(b => b.onclick = () => {
+    const path = b.getAttribute('data-sub-rm');
+    const idx = parseInt(b.getAttribute('data-sub-idx'),10);
+    const arr = path.split('.').reduce((o,k)=>o[k], DATA);
+    arr.splice(idx,1); renderAll();
+  });
+
+  // Block CRUD
+  document.querySelectorAll('[data-add-block]').forEach(b => b.onclick = () => {
+    const pi = parseInt(b.getAttribute('data-add-block'),10);
+    const type = b.getAttribute('data-block-type');
+    const defaults = { heading:{type,content:'',level:'h2',align:'left'}, paragraph:{type,content:''}, image:{type,src:'',alt:'',caption:''}, link:{type,label:'',href:'',style:'button',newTab:false}, spacer:{type,size:'medium'}, divider:{type} };
+    DATA.pages[pi].blocks.push(defaults[type]);
+    renderAll();
+  });
+  document.querySelectorAll('[data-block-rm]').forEach(b => b.onclick = () => {
+    const pi = parseInt(b.getAttribute('data-block-rm'),10);
+    const bi = parseInt(b.getAttribute('data-block-idx'),10);
+    if (confirm('Remove this block?')) { DATA.pages[pi].blocks.splice(bi,1); renderAll(); }
+  });
+  document.querySelectorAll('[data-block-up]').forEach(b => b.onclick = () => {
+    const pi=parseInt(b.getAttribute('data-block-up'),10); const bi=parseInt(b.getAttribute('data-block-idx'),10);
+    const arr = DATA.pages[pi].blocks;
+    if (bi>0) { [arr[bi-1],arr[bi]]=[arr[bi],arr[bi-1]]; renderAll(); }
+  });
+  document.querySelectorAll('[data-block-down]').forEach(b => b.onclick = () => {
+    const pi=parseInt(b.getAttribute('data-block-down'),10); const bi=parseInt(b.getAttribute('data-block-idx'),10);
+    const arr = DATA.pages[pi].blocks;
+    if (bi<arr.length-1) { [arr[bi+1],arr[bi]]=[arr[bi],arr[bi+1]]; renderAll(); }
+  });
+
+  // City / Exit page generation
+  document.querySelectorAll('[data-gen-city]').forEach(b => b.onclick = () => generateCityPage(parseInt(b.getAttribute('data-gen-city'),10)));
+  document.querySelectorAll('[data-gen-exit]').forEach(b => b.onclick = () => generateExitPage(parseInt(b.getAttribute('data-gen-exit'),10)));
+  const genAllCities = document.getElementById('gen-all-cities');
+  if (genAllCities) genAllCities.onclick = () => { (DATA.serviceAreas||[]).forEach((_,i)=>generateCityPage(i, true)); renderAll(); E.toast('Generated missing city pages','success'); };
+  const genAllExits = document.getElementById('gen-all-exits');
+  if (genAllExits) genAllExits.onclick = () => { (DATA.i40Exits||[]).forEach((_,i)=>generateExitPage(i, true)); renderAll(); E.toast('Generated missing exit pages','success'); };
+
+  // Keyword bank
+  document.querySelectorAll('[data-kw-rm]').forEach(b => b.onclick = () => {
+    const k = b.getAttribute('data-kw-rm'); const idx = parseInt(b.getAttribute('data-kw-idx'),10);
+    DATA.seo.keywordBank[k].splice(idx,1); renderAll();
+  });
+  document.querySelectorAll('[data-kw-add]').forEach(form => form.addEventListener('submit', e => {
+    e.preventDefault();
+    const k = form.getAttribute('data-kw-add');
+    const inp = form.querySelector('input');
+    const v = inp.value.trim();
+    if (!v) return;
+    if (!DATA.seo.keywordBank[k]) DATA.seo.keywordBank[k] = [];
+    DATA.seo.keywordBank[k].push(v);
+    renderAll();
+  }));
+  const kwRegen = document.getElementById('kw-regen');
+  if (kwRegen) kwRegen.onclick = () => {
+    DATA.seo.defaultKeywords = Object.values(DATA.seo.keywordBank).flat().join(', ');
+    renderAll(); E.toast('defaultKeywords regenerated','success');
+  };
+  const kwRestore = document.getElementById('kw-restore');
+  if (kwRestore) kwRestore.onclick = () => {
+    if (!confirm('This replaces your current keyword bank with the defaults. Continue?')) return;
+    DATA.seo.keywordBank = JSON.parse(JSON.stringify(DEFAULT_KEYWORD_BANK));
+    renderAll(); E.toast('Default bank restored','success');
+  };
+  const kwExport = document.getElementById('kw-export');
+  if (kwExport) kwExport.onclick = () => {
+    const rows = [['bucket','keyword']];
+    Object.entries(DATA.seo.keywordBank).forEach(([k,arr]) => arr.forEach(kw => rows.push([k, kw])));
+    const csv = rows.map(r => r.map(c => `"${c.replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'keyword-bank.csv';
+    a.click();
+  };
+
+  // Theme color edits — live sync hex/color inputs
+  document.querySelectorAll('[data-theme]').forEach(el => {
+    el.addEventListener('input', () => {
+      const [palette, key] = el.getAttribute('data-theme').split('.');
+      DATA.theme[palette][key] = el.value;
+      // Sync sibling
+      document.querySelectorAll(`[data-theme="${palette}.${key}"]`).forEach(sib => { if (sib !== el) sib.value = el.value; });
+      refreshJsonPreview();
+    });
+  });
+  document.querySelectorAll('[data-reset-palette]').forEach(b => b.onclick = () => {
+    const p = b.getAttribute('data-reset-palette');
+    DATA.theme[p] = JSON.parse(JSON.stringify(E.DEFAULT_THEME[p]));
+    renderAll(); E.toast(p+' palette reset','success');
+  });
+  document.querySelectorAll('[data-preview-palette]').forEach(b => b.onclick = () => {
+    const p = b.getAttribute('data-preview-palette');
+    const orig = document.body.style.background;
+    document.body.style.background = DATA.theme[p].bg;
+    setTimeout(()=>{ document.body.style.background = orig; }, 1200);
+  });
+}
+
+function generateCityPage(idx, silent=false) {
+  const a = DATA.serviceAreas[idx];
+  if (!a) return;
+  const slug = a.slug || (a.city.toLowerCase().replace(/\s+/g,'-')+'-'+a.state.toLowerCase());
+  if (DATA.pages.find(p=>p.id===slug)) { if (!silent) E.toast('Already exists: '+slug,'info'); return; }
+  const tmpl = (DATA.seo.metaTemplates.city || '24/7 Roadside Assistance {city} {state} | {brand} — {phoneDisplay}')
+    .replace('{city}',a.city).replace('{state}',a.state).replace('{brand}',DATA.brand||'').replace('{phoneDisplay}',DATA.phoneDisplay||'');
+  DATA.pages.push({
+    id: slug,
+    title: `24/7 Roadside Assistance in ${a.city}, ${a.state}`,
+    metaDescription: `Stuck in ${a.city}? ${DATA.brand} dispatches in ${a.driveTime||'minutes'}. Towing, flat tires, jump starts, lockouts, fuel. Call ${DATA.phoneDisplay}.`,
+    showInNav: false,
+    blocks: [
+      { type:'heading', content:tmpl, level:'h1', align:'left' },
+      { type:'paragraph', content:`${a.driveTime||'Quick dispatch'} from our base. Average response under 30 minutes.` },
+      { type:'heading', content:'Services Available', level:'h2', align:'left' },
+      { type:'paragraph', content:'Emergency Towing • Flat Tire Repair • Battery Jump Start • Vehicle Lockout • Fuel Delivery • Winch-Out • Mobile Mechanic • Semi Truck Repair' },
+      { type:'spacer', size:'medium' },
+      { type:'link', label:`📞 Call ${DATA.phoneDisplay}`, href:`tel:${DATA.phone}`, style:'button', newTab:false }
+    ]
+  });
+  if (!silent) { renderAll(); E.toast('City page generated: '+slug,'success'); }
+}
+function generateExitPage(idx, silent=false) {
+  const x = DATA.i40Exits[idx];
+  if (!x) return;
+  const slug = x.slug || `i40-exit-${x.exit}`;
+  if (DATA.pages.find(p=>p.id===slug)) { if (!silent) E.toast('Already exists: '+slug,'info'); return; }
+  const tmpl = (DATA.seo.metaTemplates.exit || 'Tow Truck I-40 Exit {exit} {name} {city} | {brand} — {phoneDisplay}')
+    .replace('{exit}',x.exit).replace('{name}',x.name).replace('{city}',x.city).replace('{brand}',DATA.brand||'').replace('{phoneDisplay}',DATA.phoneDisplay||'');
+  DATA.pages.push({
+    id: slug,
+    title: tmpl,
+    metaDescription: `Broke down at I-40 Exit ${x.exit} ${x.name}? ${DATA.brand} dispatches in under 25 min. 24/7 towing, mobile mechanic, semi truck repair. Call ${DATA.phoneDisplay}.`,
+    showInNav: false,
+    blocks: [
+      { type:'heading', content:`Tow Truck at I-40 Exit ${x.exit} ${x.name}`, level:'h1', align:'left' },
+      { type:'paragraph', content:`Stuck at Exit ${x.exit} (${x.name}) on I-40 in ${x.city}? Our heavy-duty wreckers patrol this corridor 24/7. Avg dispatch to this exit: under 25 minutes.` },
+      { type:'heading', content:'What We Handle Here', level:'h2', align:'left' },
+      { type:'paragraph', content:'Light, medium & heavy-duty towing • Semi truck breakdowns • DPF/DEF/air-brake repair • Tire blowouts • Jump starts • Winch-out & recovery' },
+      { type:'spacer', size:'medium' },
+      { type:'link', label:`🚨 CALL NOW (${DATA.phoneDisplay})`, href:`tel:${DATA.phone}`, style:'button', newTab:false }
+    ]
+  });
+  if (!silent) { renderAll(); E.toast('Exit page generated: '+slug,'success'); }
+}
+</script>
+</body>
+</html>

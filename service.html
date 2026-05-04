@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function(){
+      var m = localStorage.getItem('delta_theme_mode') || 'auto';
+      if (m === 'auto') m = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.classList.add(m === 'light' ? 'light' : 'dark');
+    })();
+  </script>
+
+  <title>Service — Maxwell Roadside</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        colors: {
+          'background':'var(--c-bg)','on-background':'var(--c-text)',
+          'surface':'var(--c-surface)','surface-container':'var(--c-surface)',
+          'surface-container-low':'var(--c-surface-alt)','surface-container-lowest':'var(--c-surface-deep)',
+          'surface-container-high':'var(--c-surface-emphasis)','on-surface':'var(--c-text)',
+          'on-surface-variant':'var(--c-text-muted)','outline':'var(--c-border)',
+          'tertiary':'var(--c-accent)','cta':'var(--c-cta)','cta-hover':'var(--c-cta-hover)',
+          'header-bg':'var(--c-header-bg)',
+          'primary':'#b30400','on-primary':'#ffffff','primary-container':'#e10600',
+          'on-primary-fixed-variant':'#930300','tertiary-fixed':'#ffe17a',
+          'tertiary-fixed-dim':'#ecc300','on-tertiary-fixed':'#231b00',
+          'inverse-surface':'#313030','error':'#ba1a1a',
+        },
+        fontFamily: {
+          'display-hero':['Manrope'],'headline-lg':['Manrope'],'headline-md':['Manrope'],
+          'phone-number':['Manrope'],'body-lg':['Inter'],'body-md':['Inter'],'label-caps':['Inter'],
+        },
+        fontSize: {
+          'display-hero':['clamp(2.25rem,5vw,3rem)',{lineHeight:'1.1',letterSpacing:'-0.02em',fontWeight:'800'}],
+          'headline-lg':['clamp(1.75rem,4vw,2rem)',{lineHeight:'1.2',fontWeight:'800'}],
+          'headline-md':['1.5rem',{lineHeight:'1.3',fontWeight:'700'}],
+          'phone-number':['2.5rem',{lineHeight:'1',fontWeight:'800'}],
+          'body-lg':['1.125rem',{lineHeight:'1.6',fontWeight:'500'}],
+          'body-md':['1rem',{lineHeight:'1.5',fontWeight:'400'}],
+          'label-caps':['0.875rem',{lineHeight:'1',letterSpacing:'0.05em',fontWeight:'700'}],
+        },
+        spacing: {'margin-mobile':'20px','gutter':'16px','touch-target-min':'56px','stack-gap':'24px','margin-desktop':'40px','unit':'8px'},
+        borderRadius: {DEFAULT:'0.125rem',lg:'0.25rem',xl:'0.5rem',full:'0.75rem'},
+      }},
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+    [data-faq-panel] { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+  </style>
+</head>
+
+<body data-delta-app="service" class="bg-background text-on-background antialiased pb-24 md:pb-0 min-h-screen flex flex-col">
+
+  <!-- Header (same as index.html for consistency) -->
+  <header class="sticky top-0 z-[100] bg-surface border-b-2 border-outline">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-margin-desktop h-16 md:h-20">
+      <div class="flex items-center gap-3">
+        <button data-delta-trigger="mobile-nav" aria-label="Menu" class="md:hidden flex items-center justify-center w-12 h-12 text-on-background hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="text-lg md:text-xl font-black text-cta uppercase tracking-tighter italic">
+          <span data-delta="brand">Maxwell Roadside</span>
+        </a>
+      </div>
+      <nav data-delta="nav.desktop" class="hidden md:flex items-center gap-8"></nav>
+      <div class="flex items-center gap-2">
+        <button data-delta-trigger="theme-toggle" aria-label="Toggle theme" class="hidden md:flex items-center justify-center w-10 h-10 text-on-background hover:bg-surface-container-low rounded-full transition-colors">
+          <span class="material-symbols-outlined" data-delta-theme-icon="dark">light_mode</span>
+          <span class="material-symbols-outlined" data-delta-theme-icon="light" style="display:none">dark_mode</span>
+        </button>
+        <a data-delta-href="phone" href="tel:" class="btn-magnetic hidden md:inline-flex items-center gap-2 bg-cta text-on-primary h-12 px-5 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-cta-hover transition-colors">
+          <span class="material-symbols-outlined">call</span>
+          <span data-delta="phoneDisplay">(806) 555-0124</span>
+        </a>
+        <a data-delta-href="phone" href="tel:" class="md:hidden inline-flex items-center justify-center bg-cta text-on-primary w-12 h-12 border-2 border-outline">
+          <span class="material-symbols-outlined">call</span>
+        </a>
+      </div>
+    </div>
+    <nav data-delta-target="mobile-nav" class="md:hidden fixed inset-y-0 right-0 w-3/4 max-w-xs bg-surface border-l-2 border-outline transform translate-x-full transition-transform duration-300 z-[101] pt-20 overflow-y-auto">
+      <div data-delta="nav.mobile"></div>
+    </nav>
+  </header>
+
+  <main class="flex-1">
+
+    <!-- Not Found -->
+    <section id="not-found" style="display:none" class="py-20 px-margin-mobile md:px-margin-desktop text-center">
+      <div class="max-w-xl mx-auto flex flex-col gap-4">
+        <span class="material-symbols-outlined text-6xl text-cta mx-auto">error</span>
+        <h1 class="font-headline-lg text-headline-lg text-on-background">Service Not Found</h1>
+        <p class="text-on-surface-variant">The service you're looking for doesn't exist or has been moved.</p>
+        <a href="index.html" class="inline-block bg-cta text-on-primary h-touch-target-min px-6 leading-[56px] mt-4 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-cta-hover transition-colors">← Back to Home</a>
+      </div>
+    </section>
+
+    <!-- Service Content -->
+    <section id="service-content" class="py-12 md:py-16 px-margin-mobile md:px-margin-desktop">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Breadcrumb -->
+        <nav class="text-sm text-on-surface-variant mb-6" aria-label="Breadcrumb">
+          <a href="index.html" class="hover:text-cta">Home</a>
+          <span class="mx-2">/</span>
+          <a href="index.html#services" class="hover:text-cta">Services</a>
+          <span class="mx-2">/</span>
+          <span data-delta="service.title" class="text-on-background">Service</span>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+
+          <!-- Image -->
+          <div class="aspect-video lg:aspect-square overflow-hidden border-2 border-outline">
+            <img data-delta="service.image" src="" alt="" class="w-full h-full object-cover" loading="lazy">
+          </div>
+
+          <!-- Details -->
+          <div class="flex flex-col gap-4">
+            <span data-delta="service.category" class="inline-block bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps uppercase px-3 py-1 w-fit border-2 border-outline">Roadside</span>
+            <h1 data-delta="service.title" class="font-display-hero text-display-hero text-on-background">Service</h1>
+            <p data-delta="service.shortDesc" class="font-body-lg text-body-lg text-on-surface-variant"></p>
+            <p data-delta="service.longDesc" class="font-body-md text-body-md text-on-background mt-2"></p>
+
+            <!-- CTA buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 mt-4">
+              <a data-delta-href="phone" href="tel:" class="btn-magnetic flex items-center justify-center gap-3 bg-cta text-on-primary h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-cta-hover transition-colors active:scale-95">
+                <span class="material-symbols-outlined">call</span>
+                🚨 CALL NOW
+              </a>
+              <a data-delta-href="text" href="sms:" class="btn-magnetic flex items-center justify-center gap-3 bg-tertiary-fixed text-on-tertiary-fixed h-touch-target-min px-8 font-label-caps text-label-caps uppercase border-2 border-outline hover:bg-tertiary-fixed-dim transition-colors active:scale-95">
+                <span class="material-symbols-outlined">chat</span>
+                REQUEST VIA SMS
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Table -->
+        <div class="mt-12 md:mt-16">
+          <h2 class="font-headline-lg text-headline-lg text-on-background border-b-2 border-on-background pb-3 mb-6">Transparent Pricing</h2>
+          <table class="w-full border-2 border-outline border-collapse">
+            <thead>
+              <tr class="bg-surface-container">
+                <th class="text-left p-4 font-label-caps text-label-caps uppercase">Service</th>
+                <th class="text-right p-4 font-label-caps text-label-caps uppercase">Price</th>
+                <th class="text-left p-4 font-label-caps text-label-caps uppercase">Note</th>
+              </tr>
+            </thead>
+            <tbody data-delta="service.pricing"></tbody>
+          </table>
+          <p class="text-sm italic text-on-surface-variant mt-3">* Pricing inside city limits. Mileage outside city limits, after-hours, and heavy-duty service may incur additional charges.</p>
+        </div>
+
+        <!-- FAQ -->
+        <div class="mt-12 md:mt-16">
+          <h2 class="font-headline-lg text-headline-lg text-on-background border-b-2 border-on-background pb-3 mb-6">Frequently Asked Questions</h2>
+          <div data-delta="service.faq" class="flex flex-col gap-3"></div>
+        </div>
+
+        <!-- Related Services -->
+        <div class="mt-12 md:mt-16">
+          <h2 class="font-headline-lg text-headline-lg text-on-background border-b-2 border-on-background pb-3 mb-6">Other Services</h2>
+          <div data-delta="service.related" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-header-bg text-white py-10 px-margin-mobile md:px-margin-desktop border-t-4 border-tertiary-fixed-dim mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6">
+      <span class="text-xl font-black text-cta uppercase italic"><span data-delta="brand"></span></span>
+      <a data-delta-href="phone" href="tel:" class="font-phone-number text-3xl text-cta hover:text-cta-hover">
+        <span data-delta="phoneDisplay"></span>
+      </a>
+      <span class="text-white/70 text-sm self-center"><span data-delta="hoursWeekday"></span></span>
+    </div>
+  </footer>
+
+  <!-- Sticky Mobile CTA Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-stretch justify-around bg-header-bg border-t-4 border-tertiary-fixed-dim h-20">
+    <a data-delta-trigger="call" href="tel:" aria-label="Call us" class="flex flex-col items-center justify-center bg-cta text-on-primary w-full h-full font-label-caps text-label-caps uppercase">
+      <span class="material-symbols-outlined mb-1">call</span>CALL
+    </a>
+    <a data-delta-trigger="text" href="sms:" aria-label="Text us" class="flex flex-col items-center justify-center text-white w-full h-full font-label-caps text-label-caps uppercase hover:bg-cta">
+      <span class="material-symbols-outlined mb-1">chat</span>TEXT
+    </a>
+    <button data-delta-trigger="location" aria-label="Share location" class="flex flex-col items-center justify-center text-white w-full h-full font-label-caps text-label-caps uppercase hover:bg-cta">
+      <span class="material-symbols-outlined mb-1">location_on</span>LOCATION
+    </button>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="delta-engine.js"></script>
+
+  <script>
+    (async function() {
+      try {
+        var c = await DeltaEngine.loadContent();
+        DeltaEngine.applyTheme(c);
+        DeltaEngine.bindThemeToggle();
+
+        // Render brand + nav
+        document.querySelectorAll('[data-delta="brand"]').forEach(el => el.textContent = c.brand || '');
+        document.querySelectorAll('[data-delta="phoneDisplay"]').forEach(el => el.textContent = c.phoneDisplay || '');
+        document.querySelectorAll('[data-delta="hoursWeekday"]').forEach(el => el.textContent = c.hoursWeekday || '');
+        document.querySelectorAll('a[data-delta-href="phone"]').forEach(a => a.href = 'tel:' + (c.phone || ''));
+        document.querySelectorAll('a[data-delta-href="text"]').forEach(a => {
+          a.href = c.whatsapp ? 'https://wa.me/' + c.whatsapp.replace(/\D/g,'') : 'sms:' + (c.phone || '');
+        });
+
+        var navD = document.querySelector('[data-delta="nav.desktop"]');
+        var navM = document.querySelector('[data-delta="nav.mobile"]');
+        var nav = (c.nav || []).map(n =>
+          `<a class="nav-link transition-colors hover:text-cta font-label-caps text-label-caps uppercase" href="${n.href}">${n.label}</a>`
+        ).join('');
+        if (navD) navD.innerHTML = nav;
+        if (navM) navM.innerHTML = (c.nav || []).map(n =>
+          `<a class="block py-3 px-4 text-on-background hover:bg-surface-container-low border-b border-outline/20" href="${n.href}">${n.label}</a>`
+        ).join('');
+
+        var id = new URLSearchParams(location.search).get('id');
+        var service = (c.services || []).find(s => s.id === id);
+
+        if (!service) {
+          document.getElementById('not-found').style.display = '';
+          document.getElementById('service-content').style.display = 'none';
+          document.title = 'Service Not Found — ' + (c.brand || '');
+          DeltaEngine.bindMobileNav();
+          DeltaEngine.bindMobileCTABar(c);
+          return;
+        }
+
+        // Page meta
+        var s = c.seo || {};
+        var tmpl = (s.metaTemplates && s.metaTemplates.service) || '{service.title} {seo.geoPlacename} TX | {brand} 24/7 — {phoneDisplay}';
+        document.title = tmpl
+          .replace('{service.title}', service.title)
+          .replace('{seo.geoPlacename}', s.geoPlacename || '')
+          .replace('{brand}', c.brand || '')
+          .replace('{phoneDisplay}', c.phoneDisplay || '');
+
+        // Inject SEO + per-service schema
+        DeltaEngine.injectSEO && DeltaEngine.injectSEO(c);
+        DeltaEngine.injectServiceSchema && DeltaEngine.injectServiceSchema(c, service);
+
+        // Populate service fields
+        document.querySelectorAll('[data-delta="service.title"]').forEach(el => el.textContent = service.title);
+        document.querySelectorAll('[data-delta="service.category"]').forEach(el => el.textContent = service.category || 'Service');
+        document.querySelectorAll('[data-delta="service.shortDesc"]').forEach(el => el.textContent = service.shortDesc || '');
+        document.querySelectorAll('[data-delta="service.longDesc"]').forEach(el => el.textContent = service.longDesc || '');
+        var img = document.querySelector('[data-delta="service.image"]');
+        if (img) {
+          img.src = DeltaEngine.normalizeImageUrl(service.image);
+          img.alt = service.title;
+          img.onerror = function(){ this.onerror=null; this.src=DeltaEngine.IMG_PLACEHOLDER; };
+        }
+
+        // Pricing rows
+        var priceTbody = document.querySelector('[data-delta="service.pricing"]');
+        if (priceTbody) {
+          priceTbody.innerHTML = (service.pricing || []).map((p, i) => `
+            <tr class="${i%2===0?'bg-background':'bg-surface-container-low'} border-t border-outline/30">
+              <td class="p-4 text-on-background">${DeltaEngine.escHtml(p.label)}</td>
+              <td class="p-4 text-right font-headline-md text-headline-md text-cta">${DeltaEngine.escHtml(p.price)}</td>
+              <td class="p-4 text-on-surface-variant text-sm">${DeltaEngine.escHtml(p.note || '')}</td>
+            </tr>
+          `).join('');
+        }
+
+        // FAQ accordion
+        var faqEl = document.querySelector('[data-delta="service.faq"]');
+        if (faqEl) {
+          faqEl.innerHTML = (service.faq || []).map((f, i) => `
+            <div class="border-2 border-outline">
+              <button data-faq-trigger class="w-full p-4 flex items-center justify-between text-left bg-surface-container hover:bg-surface-container-high transition-colors">
+                <span class="font-headline-md text-headline-md text-on-background">${DeltaEngine.escHtml(f.q)}</span>
+                <span class="material-symbols-outlined text-cta">expand_more</span>
+              </button>
+              <div data-faq-panel class="bg-surface">
+                <div class="p-4 text-on-surface-variant">${DeltaEngine.escHtml(f.a).replace(/\n/g,'<br>')}</div>
+              </div>
+            </div>
+          `).join('');
+          faqEl.querySelectorAll('[data-faq-trigger]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              var panel = btn.nextElementSibling;
+              var icon = btn.querySelector('.material-symbols-outlined');
+              if (panel.style.maxHeight) {
+                panel.style.maxHeight = '';
+                if (icon) icon.textContent = 'expand_more';
+              } else {
+                panel.style.maxHeight = panel.scrollHeight + 'px';
+                if (icon) icon.textContent = 'expand_less';
+              }
+            });
+          });
+        }
+
+        // Related services (all others)
+        var rel = document.querySelector('[data-delta="service.related"]');
+        if (rel) {
+          rel.innerHTML = (c.services || []).filter(sv => sv.id !== id).map(sv =>
+            `<a href="service.html?id=${encodeURIComponent(sv.id)}" class="group flex flex-col items-center gap-2 p-4 bg-surface-container border-2 border-outline hover:border-cta hover:-translate-y-1 transition-all duration-300">
+              <span class="material-symbols-outlined text-3xl text-cta" style="font-variation-settings:'FILL' 1;">${DeltaEngine.escHtml(sv.icon || 'build')}</span>
+              <span class="font-label-caps text-label-caps uppercase text-on-background text-center">${DeltaEngine.escHtml(sv.title)}</span>
+            </a>`
+          ).join('');
+        }
+
+        DeltaEngine.bindMobileNav();
+        DeltaEngine.bindMobileCTABar(c);
+        DeltaEngine.bindMagneticButtons();
+
+        // GSAP entrance: two-column reveal
+        if (window.gsap) {
+          gsap.from('#service-content > div > div > *:first-child', { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' });
+          gsap.from('#service-content > div > div > *:last-child > *', { y: 30, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
+        }
+      } catch (e) {
+        console.error('Service page boot failed:', e);
+      }
+    })();
+  </script>
+</body>
+</html>
